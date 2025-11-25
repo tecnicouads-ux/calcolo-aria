@@ -235,10 +235,10 @@ input:focus, select:focus {
   <h2>Input</h2>
 
   <label>Portata Q (m³/h)</label>
-  <input id="flow" type="number">
+  <input id="flow" type="number" inputmode="decimal">
 
   <label>Velocità V (m/s) (opzionale)</label>
-  <input id="velocity" type="number">
+  <input id="velocity" type="number" inputmode="decimal">
 
   <label>Scenario UNI</label>
   <select id="scenario">
@@ -258,17 +258,17 @@ input:focus, select:focus {
 
   <div id="rect_fields">
     <label>Base (mm)</label>
-    <input id="base" type="number">
+    <input id="base" type="number" inputmode="decimal">
     <div id="baseNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
 
     <label>Altezza (mm)</label>
-    <input id="height" type="number">
+    <input id="height" type="number" inputmode="decimal">
     <div id="heightNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
   </div>
 
   <div id="circ_fields" style="display:none;">
     <label>Diametro (mm)</label>
-    <input id="diam" type="number">
+    <input id="diam" type="number" inputmode="decimal">
   </div>
 
   <button class="btn-primary" onclick="calcola()">Calcola</button>

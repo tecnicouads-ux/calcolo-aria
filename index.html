@@ -2,10 +2,138 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Test calcolo aria</title>
+  <title>Calcolo canale aria</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Calcolo Aria">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #22c55e;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .results div {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      border-bottom: 1px dashed #334155;
+      padding-bottom: 5px;
+    }
+  </style>
 </head>
-<body style="background:#222; color:#fff; font-family:sans-serif;">
-  <h1>Funziona!</h1>
-  <p>Se vedi questo testo, GitHub Pages è ok.</p>
+
+<body>
+  <h1>Calcolo Canale Aria</h1>
+
+  <div class="card">
+    <label>Larghezza (mm)</label>
+    <input id="width" type="number" placeholder="es. 400">
+
+    <label>Altezza (mm)</label>
+    <input id="height" type="number" placeholder="es. 200">
+
+    <label>Portata Q (m³/h)</label>
+    <input id="flow" type="number" placeholder="es. 1200">
+
+    <label>Velocità V (m/s)</label>
+    <input id="velocity" type="number" placeholder="es. 4">
+
+    <button class="btn-primary" onclick="calcola()">Calcola</button>
+  </div>
+
+  <div class="card">
+    <h3>Risultati</h3>
+
+    <div class="results">
+      <div>Area A: <span id="areaOut">—</span></div>
+      <div>Diametro equivalente Deq: <span id="deqOut">—</span></div>
+      <div>Velocità V: <span id="vOut">—</span></div>
+      <div>Portata Q: <span id="qOut">—</span></div>
+    </div>
+  </div>
+
+<script>
+function round(v, d) {
+  return Math.round(v * Math.pow(10, d)) / Math.pow(10, d);
+}
+
+function calcola() {
+  let width = parseFloat(document.getElementById("width").value);
+  let height = parseFloat(document.getElementById("height").value);
+  let Q = parseFloat(document.getElementById("flow").value);
+  let V = parseFloat(document.getElementById("velocity").value);
+
+  if (!width || !height) {
+    alert("Inserisci larghezza e altezza");
+    return;
+  }
+
+  let A = (width/1000) * (height/1000);
+  let Deq = Math.sqrt(4 * A / Math.PI) * 1000;
+
+  if (Q && !V) {
+    V = (Q/3600) / A;
+  } else if (!Q && V) {
+    Q = V * A * 3600;
+  }
+
+  document.getElementById("areaOut").innerText = round(A, 4) + " m²";
+  document.getElementById("deqOut").innerText = round(Deq, 1) + " mm";
+  document.getElementById("vOut").innerText = V ? round(V, 2) + " m/s" : "—";
+  document.getElementById("qOut").innerText = Q ? round(Q, 1) + " m³/h" : "—";
+}
+</script>
+
 </body>
 </html>

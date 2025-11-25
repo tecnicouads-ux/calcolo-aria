@@ -192,9 +192,7 @@
       <div>Velocità con DN standard: <span id="stdDNVOut">—</span></div>
 
       <div id="circOut" style="display:none;">
-        <div>Diametro richiesto (se V nota): <span id="dReqOut">—</span></div>
-        <div>Diametro inserito: <span id="dInsOut">—</span></div>
-        <div>Velocità reale con diam. inserito:
+        <div>Velocità con diametro inserito:
           <span id="vRealOut">—</span>
           <span id="vRealTag" class="tag tag-na">n/d</span>
         </div>
@@ -331,21 +329,13 @@ function calcola() {
     let dInputMm = parseFloat(document.getElementById("diam").value);
     let D_ins_m = dInputMm ? dInputMm / 1000 : null;
 
-    circOut.style.display = "";
-
     if (V_input && V_input > 0) {
-      // Dimensionamento: Q + V -> A -> D_req
+      // Dimensionamento: Q + V -> A
       A = Q_m3s / V_input;
       vEff = V_input;
 
-      const D_req_m = Math.sqrt(4 * A / Math.PI);
-      const D_req_mm = D_req_m * 1000;
-      document.getElementById("dReqOut").textContent = round(D_req_mm, 1) + " mm";
-
       if (dInputMm && dInputMm > 0) {
-        document.getElementById("dInsOut").textContent =
-          round(dInputMm, 1) + " mm";
-
+        circOut.style.display = "";
         const A_ins = Math.PI * Math.pow(D_ins_m, 2) / 4;
         const V_real = Q_m3s / A_ins;
         document.getElementById("vRealOut").textContent =
@@ -360,9 +350,7 @@ function calcola() {
         vRealTagEl.textContent = vRealTag.text;
         vRealTagEl.className = "tag " + vRealTag.cls;
       } else {
-        document.getElementById("dInsOut").textContent = "—";
-        document.getElementById("vRealOut").textContent = "—";
-        document.getElementById("squareSideOut").textContent = "—";
+        circOut.style.display = "none";
       }
 
     } else {
@@ -371,13 +359,11 @@ function calcola() {
         alert("Se la velocità non è nota, per sezione circolare devi inserire il diametro.");
         return;
       }
+      circOut.style.display = "";
       const A_ins = Math.PI * Math.pow(D_ins_m, 2) / 4;
       A = A_ins;
       vEff = Q_m3s / A_ins;
 
-      document.getElementById("dReqOut").textContent = "— (V non nota)";
-      document.getElementById("dInsOut").textContent =
-        round(dInputMm, 1) + " mm";
       document.getElementById("vRealOut").textContent =
         round(vEff, 2) + " m/s";
 

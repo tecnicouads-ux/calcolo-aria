@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Calcolo Portate Aria</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- VIEWPORT AGGIORNATO (Fix notch) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <!-- iOS WebApp -->
   <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <!-- FIX STATUS BAR iPHONE -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#020617">
 
 <style>
 /* -------------------------------------------------------------
@@ -43,15 +51,19 @@ html[data-theme="light"] {
 }
 
 /* -------------------------------------------------------------
-   STRUTTURA BASE
+   STRUTTURA BASE — FIX SFONDO NOTCH
 ------------------------------------------------------------- */
-body {
+html, body {
   margin: 0;
   background: var(--bg);
   color: var(--text-main);
   font-family: var(--font-main);
   font-size: 15px;
   line-height: 1.32;
+  height: 100%;
+}
+
+body {
   display: flex;
   justify-content: center;
   padding: 12px;
@@ -63,7 +75,7 @@ body {
 }
 
 /* -------------------------------------------------------------
-   HEADER COMPATTO + LOGO 80PX
+   HEADER CON LOGO ADS
 ------------------------------------------------------------- */
 header {
   background: var(--bg-elevated);
@@ -84,20 +96,17 @@ header {
   object-fit: contain;
   border-radius: 10px;
   flex-shrink: 0;
-  margin: 0;
 }
 
 .app-title {
   font-size: 17px;
   font-weight: 700;
-  line-height: 1.0;
   margin-bottom: 3px;
 }
 
 .app-subtitle {
   font-size: 11px;
   color: var(--text-muted);
-  margin-top: 0;
   line-height: 1.0;
 }
 
@@ -161,7 +170,7 @@ input:focus, select:focus {
   margin-bottom: 8px;
 }
 
-/* link "Mostra limiti UNI" */
+/* Bottone mostra/nascondi limiti UNI */
 .link-button {
   background: none;
   border: none;
@@ -173,22 +182,19 @@ input:focus, select:focus {
   text-align: left;
 }
 
-/* riquadro limiti UNI */
+/* Tabella limiti UNI con bordo esterno */
 #uniDetails {
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
   padding: 6px;
-  margin-top: 4px;
-  margin-bottom: 8px; /* spazio prima di "Forma canale" */
-  background: var(--bg-elevated);
+  margin-bottom: 14px;
+  background: rgba(255,255,255,0.02);
 }
 
-/* tabella limiti UNI */
 .uni-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 11px;
-  margin-top: 2px;
 }
 
 .uni-table th,
@@ -229,7 +235,7 @@ input:focus, select:focus {
 }
 
 /* -------------------------------------------------------------
-   RISULTATI A 2 RIGHE
+   RISULTATI
 ------------------------------------------------------------- */
 .twoLine {
   padding: 8px 0;
@@ -242,20 +248,18 @@ input:focus, select:focus {
 .twoLine .label {
   font-size: 13px;
   color: var(--text-muted);
-  white-space: normal;
 }
 
 .twoLine .value {
   font-size: 15px;
   font-weight: 700;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* TAG VELOCITÀ */
 .tag {
-  white-space: nowrap;
   padding: 2px 8px;
   font-size: 12px;
   border-radius: 999px;
@@ -277,7 +281,6 @@ input:focus, select:focus {
 }
 
 #suggText {
-  white-space: normal !important;
   overflow-wrap: break-word;
   font-size: 14px;
   line-height: 1.35;
@@ -288,8 +291,6 @@ input:focus, select:focus {
 <body>
 <div class="app">
 
-<!-- HEADER CON LINK AL SITO ADS -->
-<a href="https://www.airdistributionsystems.it/home.php" target="_blank" style="text-decoration:none; color:inherit;">
 <header>
   <img src="logo.png" alt="Logo" class="app-logo">
   <div style="display:flex; flex-direction:column; justify-content:center;">
@@ -297,14 +298,13 @@ input:focus, select:focus {
     <div class="app-subtitle">Air Distribution Systems</div>
   </div>
 </header>
-</a>
 
-<!-- ===================== INPUT ===================== -->
+<!-- ========================================== INPUT ========================================== -->
 <div class="card">
   <h2>Input</h2>
 
-  <label for="flow">Portata Q (m³/h)</label>
-  <input id="flow" type="number" inputmode="decimal">
+  <label>Portata Q (m³/h)</label>
+  <input id="flow_m3h" type="number" inputmode="decimal">
 
   <label>Velocità V (m/s) (opzionale)</label>
   <input id="velocity" type="number" inputmode="decimal">
@@ -320,6 +320,7 @@ input:focus, select:focus {
   </select>
 
   <button type="button" class="link-button" onclick="toggleUni()">Mostra / Nascondi limiti UNI</button>
+
   <div id="uniDetails" style="display:none;">
     <table class="uni-table">
       <thead>
@@ -348,11 +349,9 @@ input:focus, select:focus {
   <div id="rect_fields">
     <label>Base (mm)</label>
     <input id="base" type="number" inputmode="decimal">
-    <div id="baseNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
 
     <label>Altezza (mm)</label>
     <input id="height" type="number" inputmode="decimal">
-    <div id="heightNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
   </div>
 
   <div id="circ_fields" style="display:none;">
@@ -364,7 +363,7 @@ input:focus, select:focus {
   <button class="btn-secondary" type="button" onclick="resetForm()">Nuovo calcolo / Reset</button>
 </div>
 
-<!-- ===================== RISULTATI ===================== -->
+<!-- ========================================== RISULTATI ========================================== -->
 <div class="card" id="resultsCard">
   <h2>Risultati</h2>
 
@@ -382,7 +381,6 @@ input:focus, select:focus {
   </div>
 
   <div id="dnBlock">
-
     <div class="twoLine">
       <span class="label">Diametro equivalente (Ø)</span>
       <span class="value" id="stdDNOut">—</span>
@@ -397,11 +395,9 @@ input:focus, select:focus {
       <span class="label">Lato sezione quadrata</span>
       <span class="value" id="rectSquareOut">—</span>
     </div>
-
   </div>
 
   <div id="circOut" style="display:none;">
-
     <div class="twoLine">
       <span class="label">Lato sezione quadrata</span>
       <span class="value" id="squareSideOut">—</span>
@@ -416,12 +412,10 @@ input:focus, select:focus {
       <span class="label">Velocità DN consigliato</span>
       <span class="value" id="circDNVOut">—</span>
     </div>
-
   </div>
-
 </div>
 
-<!-- ===================== SUGGERIMENTO ===================== -->
+<!-- ========================================== SUGGERIMENTO ========================================== -->
 <div class="card" id="suggestCard" style="display:none;">
   <h2>Suggerimento</h2>
   <div class="twoLine">
@@ -430,29 +424,18 @@ input:focus, select:focus {
   </div>
 </div>
 
-<!-- ===================== SCRIPT ===================== -->
+<!-- ========================================== SCRIPT ========================================== -->
 <script>
 function byId(i){return document.getElementById(i);}
 function round(v,d){return Math.round(v*10**d)/10**d;}
 
-/*
-  Limiti velocità canali secondo prassi progettuale
-  in accordo a UNI 10339 / UNI EN 16798 (valori tipici):
-
-  - Residenziale (rami):        1.5–3.0 m/s
-  - Uffici / Terziario:         2.5–4.5 m/s
-  - Area sanitaria:             1.5–2.5 m/s
-  - Estrazione cucine/servizi:  5.0–7.0 m/s
-  - Montanti principali:        4.0–6.5 m/s
-*/
-
 const scenarios={
-  res:{      vMin:1.5, vMax:3.0},
-  office:{   vMin:2.5, vMax:4.5},
-  hospital:{ vMin:1.5, vMax:2.5},
-  extract:{  vMin:5.0, vMax:7.0},
-  main:{     vMin:4.0, vMax:6.5},
-  none:{     vMin:null, vMax:null}
+  res:{vMin:1.5,vMax:3.0},
+  office:{vMin:2.5,vMax:4.5},
+  hospital:{vMin:1.5,vMax:2.5},
+  extract:{vMin:5.0,vMax:7.0},
+  main:{vMin:4.0,vMax:6.5},
+  none:{vMin:null,vMax:null}
 };
 
 const stdDiameters=[100,125,150,160,200,250,315,355,400,450,500,560,600];
@@ -463,31 +446,39 @@ const stdDiameters=[100,125,150,160,200,250,315,355,400,450,500,560,600];
   document.documentElement.setAttribute("data-theme",(h>=7&&h<19)?"light":"dark");
 })();
 
-/* Toggle sezione */
-document.addEventListener("DOMContentLoaded",()=>{
-  const geom=byId("geom");
-  geom.addEventListener("change",()=>{
-    if(geom.value==="rect"){
-      byId("rect_fields").style.display="";
-      byId("circ_fields").style.display="none";
-      byId("dnBlock").style.display="";
-    } else {
-      byId("rect_fields").style.display="none";
-      byId("circ_fields").style.display="";
-      byId("dnBlock").style.display="none";
-    }
-    byId("circOut").style.display="none";
-  });
-});
-
-/* Mostra / nascondi tabella limiti UNI */
 function toggleUni(){
-  const box = byId("uniDetails");
-  if(!box) return;
-  box.style.display = (box.style.display==="none" || box.style.display==="") ? "block" : "none";
+  const box=byId("uniDetails");
+  box.style.display = box.style.display==="none" ? "block" : "none";
 }
 
-/* Tag velocità */
+function resetForm(){
+  ["flow_m3h","velocity","base","height","diam"].forEach(id=>{
+    const el=byId(id);
+    if(el) el.value="";
+  });
+
+  byId("geom").value="rect";
+  byId("rect_fields").style.display="";
+  byId("circ_fields").style.display="none";
+  byId("dnBlock").style.display="";
+
+  ["areaOut","vEffOut","stdDNOut","stdDNVOut","rectSquareOut",
+   "squareSideOut","circDNOut","circDNVOut","suggText"].forEach(id=>{
+    byId(id).textContent="—";
+  });
+
+  byId("vEffTag").textContent="n/d";
+  byId("vEffTag").className="tag tag-na";
+
+  byId("rectSquareRow").style.display="none";
+  byId("circOut").style.display="none";
+  byId("suggestCard").style.display="none";
+
+  byId("uniDetails").style.display="none";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function getTag(v,min,max){
   if(min==null) return {text:"n/d",cls:"tag-na"};
   if(v<min) return {text:"Bassa",cls:"tag-low"};
@@ -495,61 +486,22 @@ function getTag(v,min,max){
   return {text:"Alta",cls:"tag-high"};
 }
 
-/* RESET COMPLETO */
-function resetForm(){
-  ["flow","velocity","base","height","diam"].forEach(id=>{
-    const el = byId(id);
-    if(el) el.value = "";
-  });
-
-  byId("scenario").value = "res";
-  byId("geom").value = "rect";
-
-  byId("rect_fields").style.display = "";
-  byId("circ_fields").style.display = "none";
-  byId("dnBlock").style.display = "";
-
-  byId("areaOut").textContent = "—";
-  byId("vEffOut").textContent = "—";
-  byId("vEffTag").textContent = "n/d";
-  byId("vEffTag").className = "tag tag-na";
-  byId("stdDNOut").textContent = "—";
-  byId("stdDNVOut").textContent = "—";
-  byId("rectSquareOut").textContent = "—";
-  byId("squareSideOut").textContent = "—";
-  byId("circDNOut").textContent = "—";
-  byId("circDNVOut").textContent = "—";
-  byId("suggText").textContent = "—";
-
-  byId("rectSquareRow").style.display = "none";
-  byId("circOut").style.display = "none";
-  byId("suggestCard").style.display = "none";
-  byId("baseNote").style.display = "none";
-  byId("heightNote").style.display = "none";
-
-  const uniBox = byId("uniDetails");
-  if(uniBox) uniBox.style.display = "none";
-
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-
-/* CALCOLO */
 function calcola(){
-  const Q = parseFloat(byId("flow").value);
-  if(!Q || Q<=0){alert("Inserisci una portata Q > 0");return;}
+  const Qm=parseFloat(byId("flow_m3h").value);
+  let Q=null;
+  if(!isNaN(Qm)&&Qm>0) Q=Qm;
+  if(!Q){alert("Inserisci una portata Q (m³/h) > 0");return;}
 
   const V_in=parseFloat(byId("velocity").value);
   const geom=byId("geom").value;
   const scen=scenarios[byId("scenario").value];
-
   const Qs=Q/3600;
 
   let A=null,v=null;
 
-  /* RESET parziale output calcolo */
+  /* RESET */
   byId("circOut").style.display="none";
   byId("rectSquareRow").style.display="none";
-  byId("rectSquareOut").textContent="—";
   byId("suggText").textContent="—";
   byId("suggestCard").style.display="none";
   byId("baseNote").style.display="none";
@@ -561,41 +513,31 @@ function calcola(){
     const hMm=parseFloat(byId("height").value);
     let b=bMm?bMm/1000:null;
     let h=hMm?hMm/1000:null;
-
-    const hasB=!!b;
-    const hasH=!!h;
+    const hasB=!!b, hasH=!!h;
 
     if(V_in){
-      A=Qs/V_in;
-      v=V_in;
-
+      A=Qs/V_in; v=V_in;
       if(hasB && !hasH){
         h=A/b;
         byId("height").value=round(h*1000,1);
         byId("heightNote").style.display="";
-      }
-      else if(!hasB && hasH){
+      } else if(!hasB && hasH){
         b=A/h;
         byId("base").value=round(b*1000,1);
         byId("baseNote").style.display="";
-      }
-      else if(!hasB && !hasH){
+      } else if(!hasB && !hasH){
         const side=Math.sqrt(A)*1000;
         byId("rectSquareRow").style.display="";
         byId("rectSquareOut").textContent=round(side,1)+" mm";
+      } else {
+        A=b*h; v=Qs/A;
       }
-      else {
-        A=b*h;
-        v=Qs/A;
-      }
-
     } else {
       if(!hasB || !hasH){
-        alert("Se la velocità non è nota, inserisci sia base che altezza.");
+        alert("Se V non è nota, inserisci base e altezza.");
         return;
       }
-      A=b*h;
-      v=Qs/A;
+      A=b*h; v=Qs/A;
     }
   }
 
@@ -605,8 +547,7 @@ function calcola(){
     const hasD=dMm>0;
 
     if(V_in){
-      A=Qs/V_in;
-      v=V_in;
+      A=Qs/V_in; v=V_in;
     } else {
       if(!hasD){alert("Se V è sconosciuta, inserisci diametro.");return;}
       const d=dMm/1000;
@@ -622,10 +563,7 @@ function calcola(){
       const Deq=Math.sqrt(4*A/Math.PI)*1000;
       let best=null,min=1e9;
       for(const dn of stdDiameters){
-        if(Math.abs(dn-Deq)<min){
-          min=Math.abs(dn-Deq);
-          best=dn;
-        }
+        if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn;}
       }
       byId("circDNOut").textContent="DN "+best+" mm";
       const Astd=Math.PI*(best/1000)**2/4;
@@ -635,79 +573,52 @@ function calcola(){
 
   if(!A||!v){alert("Errore.");return;}
 
-  /* RISULTATI */
+  byId("areaOut").textContent=round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
+  byId("vEffOut").textContent=round(v,2)+" m/s";
 
-  byId("areaOut").textContent =
-    round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
+  const tag=getTag(v,scen.vMin,scen.vMax);
+  byId("vEffTag").textContent=tag.text;
+  byId("vEffTag").className="tag "+tag.cls;
 
-  byId("vEffOut").textContent = round(v,2)+" m/s";
-
-  const tag = getTag(v,scen.vMin,scen.vMax);
-  byId("vEffTag").textContent = tag.text;
-  byId("vEffTag").className = "tag "+tag.cls;
-
-  /* DIAMETRO EQUIVALENTE (RETTANGOLARE) */
-  if(geom==="rect"){
-    const Deq = Math.sqrt(4*A/Math.PI)*1000;
-    let best=null,min=1e9;
-    for(const dn of stdDiameters){
-      if(Math.abs(dn-Deq)<min){
-        min=Math.abs(dn-Deq);
-        best=dn;
-      }
-    }
-
-    if(best){
-      byId("stdDNOut").textContent = "Ø "+best+" mm";
-      const Astd=Math.PI*(best/1000)**2/4;
-      byId("stdDNVOut").textContent = round(Qs/Astd,2)+" m/s";
-    } else {
-      byId("stdDNOut").textContent="—";
-      byId("stdDNVOut").textContent="—";
-    }
+  /* DIAMETRO EQUIVALENTE */
+  const Deq=Math.sqrt(4*A/Math.PI)*1000;
+  let best=null,min=1e9;
+  for(const dn of stdDiameters){
+    if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn;}
   }
-  else {
+
+  if(geom==="rect" && best){
+    byId("stdDNOut").textContent="Ø "+best+" mm";
+    const Astd=Math.PI*(best/1000)**2/4;
+    byId("stdDNVOut").textContent=round(Qs/Astd,2)+" m/s";
+  } else {
     byId("stdDNOut").textContent="—";
     byId("stdDNVOut").textContent="—";
   }
 
   /* SUGGERIMENTO UNI */
   if(scen.vMax!=null && v>scen.vMax){
-    const vT = (scen.vMin+scen.vMax)/2;
-    const Anew = Qs / vT;
+    const vT=(scen.vMin+scen.vMax)/2;
+    const Anew=Qs/vT;
 
     if(geom==="rect"){
       const side=Math.sqrt(Anew)*1000;
-      byId("suggText").textContent =
-        "Velocità troppo alta. Sezione consigliata ~ " +
-        round(side,1)+" × "+round(side,1)+" mm.";
-    }
-
-    else {
-      const Deq = Math.sqrt(4*Anew/Math.PI)*1000;
-      let best=null,min=1e9;
+      byId("suggText").textContent="Velocità troppo alta. Sezione consigliata ~ "+round(side,1)+" × "+round(side,1)+" mm.";
+    } else {
+      const Deq2=Math.sqrt(4*Anew/Math.PI)*1000;
+      let best2=null,min2=1e9;
       for(const dn of stdDiameters){
-        if(Math.abs(dn-Deq)<min){
-          min=Math.abs(dn-Deq);
-          best=dn;
-        }
+        if(Math.abs(dn-Deq2)<min2){min2=Math.abs(dn-Deq2);best2=dn;}
       }
-      const Astd=Math.PI*(best/1000)**2/4;
-      const v2 = Qs/Astd;
-
-      byId("suggText").textContent =
-        "Velocità troppo alta. Suggerito Ø "+best+" mm (V≈"+
-        round(v2,2)+" m/s).";
+      const Astd2=Math.PI*(best2/1000)**2/4;
+      const vv=Qs/Astd2;
+      byId("suggText").textContent="Velocità troppo alta. Suggerito Ø "+best2+" mm (V≈"+round(vv,2)+" m/s).";
     }
 
     byId("suggestCard").style.display="";
   }
 
-  /* 👉 SCROLL AI RISULTATI */
-  const resCard = byId("resultsCard");
-  if(resCard && resCard.scrollIntoView){
-    resCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  byId("resultsCard").scrollIntoView({behavior:"smooth",block:"start"});
 }
 </script>
 

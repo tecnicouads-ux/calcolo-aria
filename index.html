@@ -126,13 +126,20 @@ input, select {
   border: 1px solid var(--border);
   background: var(--bg-elevated);
   color: var(--text-main);
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 input:focus, select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
   outline: none;
+}
+
+.auto-note {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: -2px;
+  margin-bottom: 8px;
 }
 
 /* -------------------------------------------------------------
@@ -151,7 +158,7 @@ input:focus, select:focus {
 }
 
 /* -------------------------------------------------------------
-   RISULTATI A DUE RIGHE (MAI FUORI SCHERMO)
+   RISULTATI A DUE RIGHE
 ------------------------------------------------------------- */
 .twoLine {
   padding: 8px 0;
@@ -194,7 +201,7 @@ input:focus, select:focus {
 .tag-na  { background:#6b728033; color:#6b7280; }
 
 /* -------------------------------------------------------------
-   SUGGERIMENTO — MULTILINEA
+   SUGGERIMENTO
 ------------------------------------------------------------- */
 #suggestCard {
   background:#f9731615;
@@ -252,8 +259,11 @@ input:focus, select:focus {
   <div id="rect_fields">
     <label>Base (mm)</label>
     <input id="base" type="number">
+    <div id="baseNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
+
     <label>Altezza (mm)</label>
     <input id="height" type="number">
+    <div id="heightNote" class="auto-note" style="display:none;">Calcolato automaticamente</div>
   </div>
 
   <div id="circ_fields" style="display:none;">
@@ -396,6 +406,8 @@ function calcola(){
   byId("rectSquareOut").textContent="—";
   byId("suggText").textContent="—";
   byId("suggestCard").style.display="none";
+  byId("baseNote").style.display="none";
+  byId("heightNote").style.display="none";
 
   /* RETTANGOLARE */
   if(geom==="rect"){
@@ -407,30 +419,34 @@ function calcola(){
     const hasB=!!b;
     const hasH=!!h;
 
-    if(V_in){  // abbiamo velocità: usiamola per fissare l'area
+    if(V_in){  // velocità nota → area fissata
       A=Qs/V_in;
       v=V_in;
 
       if(hasB && !hasH){
-        // calcolo altezza mancante
+        // calcola altezza mancante
         h=A/b;
-        byId("height").value=round(h*1000,1);
+        const h_mm=round(h*1000,1);
+        byId("height").value=h_mm;
+        byId("heightNote").style.display="";
       } else if(!hasB && hasH){
-        // calcolo base mancante
+        // calcola base mancante
         b=A/h;
-        byId("base").value=round(b*1000,1);
+        const b_mm=round(b*1000,1);
+        byId("base").value=b_mm;
+        byId("baseNote").style.display="";
       } else if(!hasB && !hasH){
-        // nessuna dimensione data → sezione quadrata
+        // nessuna dimensione → sezione quadrata
         const side=Math.sqrt(A)*1000;
         byId("rectSquareRow").style.display="";
         byId("rectSquareOut").textContent=round(side,1)+" mm";
       } else {
-        // base e altezza entrambe inserite → ricalcolo la velocità reale
+        // base e altezza entrambe inserite → ricalcolo vera velocità
         A=b*h;
         v=Qs/A;
       }
     } else {
-      // velocità non nota: usiamo solo le dimensioni per calcolarla
+      // velocità non nota → servono base e altezza
       if(!hasB || !hasH){
         alert("Se la velocità non è nota, inserisci sia base che altezza.");
         return;
@@ -474,7 +490,9 @@ function calcola(){
   if(!A||!v){alert("Errore.");return;}
 
   /* RISULTATI PRINCIPALI */
-  byId("areaOut").textContent=round(A,4)+" m² ("+round(A*1e6)+" mm²)";
+  byId("areaOut").textContent=
+    round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
+
   byId("vEffOut").textContent=round(v,2)+" m/s";
 
   const tag=getTag(v,scen.vMin,scen.vMax);

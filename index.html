@@ -1,130 +1,319 @@
-<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Calcolo Portate Aria</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="manifest" href="manifest.json"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="apple-touch-icon" href="rounded_icon_180.png"><style>
-:root{--font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;--bg:#020617;--bg2:#0b1120;--card:#111827;--acc:#22c55e;--acc2:rgba(34,197,94,.18);--b1:#1e293b;--b2:#0f172a;--t:#f9fafb;--tm:#9ca3af}
-html[data-theme=light]{--bg:#f3f4f6;--bg2:#fff;--card:#fff;--acc:#16a34a;--acc2:rgba(22,163,74,.18);--b1:#cbd5e1;--b2:#e5e7eb;--t:#111827;--tm:#6b7280}
-body{margin:0;background:var(--bg);color:var(--t);font-family:var(--font);padding:12px;display:flex;justify-content:center}
-.app{width:100%;max-width:520px}
-header{background:var(--bg2);padding:6px 10px;border-radius:12px;display:flex;align-items:center;gap:10px;margin-bottom:12px;border:1px solid var(--b2)}
-.app-logo{width:80px;height:80px;object-fit:contain;border-radius:10px}
-.app-title{font-size:18px;font-weight:700}
-.app-subtitle{font-size:12px;color:var(--tm)}
-.card{background:var(--card);padding:14px;border-radius:16px;margin-bottom:16px;border:1px solid var(--b2)}
-input,select{width:100%;height:48px!important;font-size:15px;padding:6px 10px;border-radius:10px;border:1px solid var(--b1);background:var(--bg2);color:var(--t);margin-bottom:8px;box-sizing:border-box}
-.btn{width:100%;padding:11px;border-radius:12px;background:var(--acc);font-weight:700;border:none}
-.twoLine{padding:8px 0;border-bottom:1px solid var(--b1);display:flex;flex-direction:column}
-.label{font-size:13px;color:var(--tm)}
-.value{font-size:16px;font-weight:700;white-space:nowrap}
-.tag{padding:2px 8px;border-radius:999px;font-size:12px;margin-left:4px}
-.tag-ok{background:#22c55e33;color:#22c55e}
-.tag-low{background:#3b82f630;color:#3b82f6}
-.tag-high{background:#f9731630;color:#fb923c}
-.tag-na{background:#6b728033;color:#6b7280}
-</style></head><body><div class="app">
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Calcolo Portate Aria</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f4f4;
+  color: #222;
+  display: flex;
+  justify-content: center;
+}
+.app {
+  width: 100%;
+  max-width: 520px;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+}
+header img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+header .title {
+  font-size: 20px;
+  font-weight: 700;
+}
+.card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  margin-bottom: 18px;
+}
+.card h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+label {
+  font-size: 15px;
+  font-weight: 600;
+}
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #bbb;
+  font-size: 15px;
+  margin: 6px 0 14px 0;
+  box-sizing: border-box;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #22c55e;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+.twoLine {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+.twoLine .label {
+  font-size: 14px;
+  color: #666;
+}
+.twoLine .value {
+  font-size: 17px;
+  font-weight: 700;
+}
+.tag {
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+.tag-ok { background: #d1fae5; color: #15803d; }
+.tag-low { background: #dbeafe; color: #1e40af; }
+.tag-high { background: #ffedd5; color: #c2410c; }
+.tag-na { background: #e5e7eb; color: #6b7280; }
+</style>
+
+</head>
+<body>
+<div class="app">
 
 <header>
-<img src="logo.png" class="app-logo">
-<div>
-<div class="app-title">Calcolo Portate Aria</div>
-<div class="app-subtitle">Air Distribution Systems</div>
-</div>
+  <img src="logo.png">
+  <div class="title">Calcolo Portate Aria</div>
 </header>
 
-<div class="card"><h2>Input</h2>
-<label>Portata Q (m³/h)</label><input id="flow" type="number" inputmode="decimal">
-<label>Velocità V (m/s)</label><input id="velocity" type="number" inputmode="decimal">
-<label>Tipo ambiente (UNI 10339 / 16798)</label>
-<select id="scenario">
-<option value="res">Residenziale</option>
-<option value="office">Uffici</option>
-<option value="hospital">Area sanitaria</option>
-<option value="extract">Estrazione aria</option>
-<option value="main">Montante</option>
-<option value="none">Nessun limite</option>
-</select>
-<label>Forma canale</label>
-<select id="geom">
-<option value="rect">Rettangolare</option>
-<option value="circ">Circolare</option>
-</select>
-<div id="rect_fields">
-<label>Base (mm)</label><input id="base" type="number">
-<label>Altezza (mm)</label><input id="height" type="number">
-</div>
-<div id="circ_fields" style="display:none">
-<label>Diametro (mm)</label><input id="diam" type="number">
-</div>
-<button class="btn" onclick="calcola()">Calcola</button>
+<div class="card">
+  <h2>Input</h2>
+
+  <label>Portata Q (m³/h)</label>
+  <input id="flow" type="number">
+
+  <label>Velocità V (m/s)</label>
+  <input id="velocity" type="number">
+
+  <label>Converti portata</label>
+  <select id="conv">
+    <option value="none">Nessuna conversione</option>
+    <option value="to_ls">Da m³/h → l/s</option>
+    <option value="to_m3h">Da l/s → m³/h</option>
+  </select>
+
+  <button onclick="converti()">Converti</button>
+
+  <label>Tipo ambiente (UNI 10339)</label>
+  <select id="scenario">
+    <option value="res">Residenziale</option>
+    <option value="office">Uffici</option>
+    <option value="hospital">Area sanitaria</option>
+    <option value="extract">Estrazione aria</option>
+    <option value="main">Montante principale</option>
+    <option value="none">Nessuna limitazione</option>
+  </select>
+
+  <label>Forma canale</label>
+  <select id="geom">
+    <option value="rect">Rettangolare</option>
+    <option value="circ">Circolare</option>
+  </select>
+
+  <div id="rect_fields">
+    <label>Base (mm)</label>
+    <input id="base" type="number">
+
+    <label>Altezza (mm)</label>
+    <input id="height" type="number">
+  </div>
+
+  <div id="circ_fields" style="display:none;">
+    <label>Diametro (mm)</label>
+    <input id="diam" type="number">
+  </div>
+
+  <button onclick="calcola()">Calcola</button>
 </div>
 
-<div class="card" id="results"><h2>Risultati</h2>
-<div class="twoLine"><span class="label">Area A</span><span class="value" id="areaOut">—</span></div>
-<div class="twoLine"><span class="label">Velocità</span><span class="value"><span id="vEffOut">—</span> <span id="vEffTag" class="tag tag-na">n/d</span></span></div>
+<div class="card" id="results">
+  <h2>Risultati</h2>
 
-<div id="rectOnly">
-<div class="twoLine"><span class="label">Diametro equivalente (Ø)</span><span class="value" id="stdDNOut">—</span></div>
-</div>
+  <div class="twoLine">
+    <div class="label">Area</div>
+    <div class="value" id="areaOut">—</div>
+  </div>
 
-<div id="circOut" style="display:none">
-<div class="twoLine"><span class="label">Lato sezione quadrata</span><span class="value" id="squareSideOut">—</span></div>
-<div class="twoLine"><span class="label">Ø consigliato</span><span class="value" id="circDNOut">—</span></div>
-<div class="twoLine"><span class="label">Velocità Ø consigliato</span><span class="value" id="circDNVOut">—</span></div>
-</div>
+  <div class="twoLine">
+    <div class="label">Velocità</div>
+    <div class="value">
+      <span id="vEffOut">—</span>
+      <span id="vEffTag" class="tag tag-na">n/d</span>
+    </div>
+  </div>
+
+  <div class="twoLine">
+    <div class="label">Diametro equivalente (Ø)</div>
+    <div class="value" id="stdDNOut">—</div>
+  </div>
+
+  <div id="circOut" style="display:none;">
+    <div class="twoLine">
+      <div class="label">Quadrato equivalente</div>
+      <div class="value" id="squareOut">—</div>
+    </div>
+
+    <div class="twoLine">
+      <div class="label">DN consigliato</div>
+      <div class="value" id="circDNOut">—</div>
+    </div>
+
+    <div class="twoLine">
+      <div class="label">Velocità DN consigliato</div>
+      <div class="value" id="circDNVOut">—</div>
+    </div>
+  </div>
 </div>
 
 <script>
-function byId(i){return document.getElementById(i)}function r(v,d){return Math.round(v*10**d)/10**d}
-const std=[100,125,150,160,200,250,315,355,400,450,500,560,600];
-const scen={
-res:{min:1.5,max:3.5},
-office:{min:2,max:4},
-hospital:{min:1.5,max:3},
-extract:{min:5,max:8},
-main:{min:6,max:9},
-none:{min:null,max:null}
-};
-(function(){let h=new Date().getHours();document.documentElement.setAttribute("data-theme",(h>=7&&h<19)?"light":"dark")})();
-byId("geom").addEventListener("change",()=>{let g=byId("geom").value;byId("rect_fields").style.display=g==="rect"?"":"none";byId("circ_fields").style.display=g==="circ"?"":"none";byId("rectOnly").style.display=g==="rect"?"":"none";byId("circOut").style.display="none"});
+function byId(i){return document.getElementById(i);}
+function round(v,d){return Math.round(v*10**d)/10**d;}
 
-function tag(v,mn,mx){if(mn==null)return{text:"n/d",cls:"tag-na"};if(v<mn)return{text:"Bassa",cls:"tag-low"};if(v<=mx)return{text:"OK",cls:"tag-ok"};return{text:"Alta",cls:"tag-high"}}
+function converti(){
+  let f=parseFloat(byId("flow").value);
+  let mode=byId("conv").value;
+  if(!f){alert("Inserisci una portata.");return;}
+
+  if(mode==="to_ls"){
+    byId("flow").value = round(f/3.6,2);
+  }
+  if(mode==="to_m3h"){
+    byId("flow").value = round(f*3.6,1);
+  }
+}
+
+const UNI={
+  res:{min:1.5,max:3.5},
+  office:{min:2,max:4},
+  hospital:{min:1.5,max:3},
+  extract:{min:5,max:8},
+  main:{min:6,max:9},
+  none:{min:null,max:null}
+};
+
+const DN=[100,125,150,160,200,250,315,355,400,450,500,560,600];
+
+byId("geom").addEventListener("change", ()=>{
+  const g=byId("geom").value;
+  byId("rect_fields").style.display=(g==="rect")?"":"none";
+  byId("circ_fields").style.display=(g==="circ")?"":"none";
+  byId("circOut").style.display="none";
+});
+
+function speedTag(v, min, max){
+  if(min===null) return ["n/d","tag-na"];
+  if(v<min) return ["Bassa","tag-low"];
+  if(v<=max) return ["OK","tag-ok"];
+  return ["Alta","tag-high"];
+}
 
 function calcola(){
-let Q=parseFloat(byId("flow").value),V=parseFloat(byId("velocity").value),g=byId("geom").value,s=scen[byId("scenario").value];
-if(!Q||Q<=0){alert("Inserisci Q valida");return}
-let Qs=Q/3600,A=null,v=null;
+  let Q=parseFloat(byId("flow").value);
+  let V_in=parseFloat(byId("velocity").value);
+  let g=byId("geom").value;
+  let s=UNI[byId("scenario").value];
 
-if(g==="rect"){
-let b=parseFloat(byId("base").value)/1000,h=parseFloat(byId("height").value)/1000,hasB=!isNaN(b),hasH=!isNaN(h);
-if(V){A=Qs/V;v=V;if(hasB&&!hasH){h=A/b;byId("height").value=r(h*1000,1)}else if(!hasB&&hasH){b=A/h;byId("base").value=r(b*1000,1)}else if(!hasB&&!hasH){let side=Math.sqrt(A)*1000;byId("stdDNOut").textContent="Lato "+r(side,1)+" mm"}else{A=b*h;v=Qs/A}}
-else{if(!hasB||!hasH){alert("Se V mancante inserisci base e altezza.");return}A=b*h;v=Qs/A}}
-if(g==="circ"){
-let dMm=parseFloat(byId("diam").value),hasD=dMm>0;
-if(V){A=Qs/V;v=V}else{if(!hasD){alert("Inserisci diametro");return}let d=dMm/1000;A=Math.PI*d*d/4;v=Qs/A}
-byId("circOut").style.display="";
-let side=Math.sqrt(A)*1000;byId("squareSideOut").textContent=r(side,1)+" mm";
-if(V&&!hasD){let Deq=Math.sqrt(4*A/Math.PI)*1000,best=null,min=9999;
-for(let dn of std){if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn}}
-byId("circDNOut").textContent="Ø "+best+" mm";
-let As=Math.PI*(best/1000)**2/4;byId("circDNVOut").textContent=r(Qs/As,2)+" m/s"}}
+  if(!Q){alert("Inserisci Q");return;}
 
-if(!A||!v){alert("Errore");return}
+  let Qs=Q/3600;
+  let A=null, v=null;
 
-byId("areaOut").textContent=r(A,4)+" m² ("+r(A*1e6,0)+" mm²)";
-byId("vEffOut").textContent=r(v,2)+" m/s";
-let tg=tag(v,s.min,s.max);
-byId("vEffTag").textContent=tg.text;byId("vEffTag").className="tag "+tg.cls;
+  if(g==="rect"){
+    let b=parseFloat(byId("base").value)/1000;
+    let h=parseFloat(byId("height").value)/1000;
 
-if(g==="rect"){
-let Deq=Math.sqrt(4*A/Math.PI)*1000,best=null,min=9999;
-for(let dn of std){if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn}}
-byId("stdDNOut").textContent="Ø "+best+" mm"}
+    let hasB=!isNaN(b), hasH=!isNaN(h);
 
-document.getElementById("results").scrollIntoView({behavior:"smooth"})
+    if(V_in){
+      A=Qs/V_in; v=V_in;
+      if(hasB && !hasH){
+        h=A/b;
+        byId("height").value=round(h*1000,1);
+      }else if(!hasB && hasH){
+        b=A/h;
+        byId("base").value=round(b*1000,1);
+      }else if(hasB && hasH){
+        A=b*h; v=Qs/A;
+      }
+    }else{
+      if(!hasB || !hasH){alert("Inserisci base e altezza.");return;}
+      A=b*h; v=Qs/A;
+    }
+  }
+
+  if(g==="circ"){
+    let d=parseFloat(byId("diam").value)/1000;
+    let hasD=!isNaN(d);
+
+    if(V_in){
+      A=Qs/V_in; v=V_in;
+    }else{
+      if(!hasD){alert("Inserisci diametro.");return;}
+      A=Math.PI*d*d/4;
+      v=Qs/A;
+    }
+
+    byId("circOut").style.display="";
+
+    let side=Math.sqrt(A)*1000;
+    byId("squareOut").textContent=round(side,1)+" mm";
+
+    if(V_in && !hasD){
+      let Deq=Math.sqrt(4*A/Math.PI)*1000;
+      let best=DN.reduce((a,b)=>Math.abs(b-Deq)<Math.abs(a-Deq)?b:a);
+      byId("circDNOut").textContent="Ø "+best+" mm";
+      let Astd=Math.PI*(best/1000)**2/4;
+      byId("circDNVOut").textContent=round(Qs/Astd,2)+" m/s";
+    }
+  }
+
+  if(!A || !v){alert("Errore di calcolo.");return;}
+
+  byId("areaOut").textContent = round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
+  byId("vEffOut").textContent = round(v,2)+" m/s";
+
+  let tg=speedTag(v,s.min,s.max);
+  byId("vEffTag").textContent=tg[0];
+  byId("vEffTag").className="tag "+tg[1];
+
+  let Deq=Math.sqrt(4*A/Math.PI)*1000;
+  let best=DN.reduce((a,b)=>Math.abs(b-Deq)<Math.abs(a-Deq)?b:a);
+  byId("stdDNOut").textContent="Ø "+best+" mm";
+
+  document.getElementById("results").scrollIntoView({behavior:"smooth"});
 }
 </script>
 
-<script>
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("service-worker.js")
-}
-</script>
-
-</div></body></html>
+</div>
+</body>
+</html>

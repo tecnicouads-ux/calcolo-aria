@@ -14,10 +14,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#020617">
 
-  <!-- APP ICON + FAVICON -->
-  <link rel="icon" href="logo-app.png" type="image/png">
+  <!-- ICONA SOLO PER SEGNALIBRO iPHONE -->
   <link rel="apple-touch-icon" href="logo-app.png">
-  <link rel="apple-touch-startup-image" href="logo-app.png">
 
 <style>
 /* -------------------------------------------------------------
@@ -297,19 +295,335 @@ input:focus, select:focus {
 <div class="app">
 
 <header>
-  <img src="logo-app.png" alt="Logo" class="app-logo">
+  <img src="logo.png" alt="Logo" class="app-logo">
   <div style="display:flex; flex-direction:column; justify-content:center;">
     <div class="app-title">Calcolo Portate Aria</div>
     <div class="app-subtitle">Air Distribution Systems</div>
   </div>
 </header>
 
+<!-- ========================================== INPUT ========================================== -->
+<div class="card">
+  <h2>Input</h2>
 
-<!-- (IL RESTO DEL TUO INDEX RESTA IDENTICO: INPUT, RISULTATI, SCRIPT) -->
-<!-- ⬆️ Mantenuto intatto perché funzionava perfettamente -->
+  <label>Portata Q (m³/h)</label>
+  <input id="flow_m3h" type="number" inputmode="decimal">
 
+  <label>Velocità V (m/s) (opzionale)</label>
+  <input id="velocity" type="number" inputmode="decimal">
 
+  <label>Tipo ambiente (UNI 10339 / UNI EN 16798)</label>
+  <select id="scenario">
+    <option value="res">Residenziale (UNI 10339)</option>
+    <option value="office">Uffici / Terziario (UNI EN 16798)</option>
+    <option value="hospital">Area sanitaria (UNI 10339)</option>
+    <option value="extract">Estrazione aria (cucine, servizi)</option>
+    <option value="main">Montante principale</option>
+    <option value="none">Nessuna limitazione</option>
+  </select>
+
+  <button type="button" class="link-button" onclick="toggleUni()">Mostra / Nascondi limiti UNI</button>
+
+  <div id="uniDetails" style="display:none;">
+    <table class="uni-table">
+      <thead>
+        <tr>
+          <th>Tipo ambiente</th>
+          <th>v min [m/s]</th>
+          <th>v max [m/s]</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Residenziale</td><td>1.5</td><td>3.0</td></tr>
+        <tr><td>Uffici / Terziario</td><td>2.5</td><td>4.5</td></tr>
+        <tr><td>Area sanitaria</td><td>1.5</td><td>2.5</td></tr>
+        <tr><td>Estrazione cucine / servizi</td><td>5.0</td><td>7.0</td></tr>
+        <tr><td>Montanti principali</td><td>4.0</td><td>6.5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <label>Forma canale</label>
+  <select id="geom">
+    <option value="rect">Rettangolare</option>
+    <option value="circ">Circolare</option>
+  </select>
+
+  <div id="rect_fields">
+    <label>Base (mm)</label>
+    <input id="base" type="number" inputmode="decimal">
+
+    <label>Altezza (mm)</label>
+    <input id="height" type="number" inputmode="decimal">
+  </div>
+
+  <div id="circ_fields" style="display:none;">
+    <label>Diametro (mm)</label>
+    <input id="diam" type="number" inputmode="decimal">
+  </div>
+
+  <button class="btn-primary" onclick="calcola()">Calcola</button>
+  <button class="btn-secondary" type="button" onclick="resetForm()">Nuovo calcolo / Reset</button>
 </div>
+
+<!-- ========================================== RISULTATI ========================================== -->
+<div class="card" id="resultsCard">
+  <h2>Risultati</h2>
+
+  <div class="twoLine">
+    <span class="label">Area</span>
+    <span class="value" id="areaOut">—</span>
+  </div>
+
+  <div class="twoLine">
+    <span class="label">Velocità</span>
+    <span class="value">
+      <span id="vEffOut">—</span>
+      <span id="vEffTag" class="tag tag-na">n/d</span>
+    </span>
+  </div>
+
+  <div id="dnBlock">
+    <div class="twoLine">
+      <span class="label">Diametro equivalente (Ø)</span>
+      <span class="value" id="stdDNOut">—</span>
+    </div>
+
+    <div class="twoLine">
+      <span class="label">Velocità con Ø equivalente</span>
+      <span class="value" id="stdDNVOut">—</span>
+    </div>
+
+    <div id="rectSquareRow" class="twoLine" style="display:none;">
+      <span class="label">Lato sezione quadrata</span>
+      <span class="value" id="rectSquareOut">—</span>
+    </div>
+  </div>
+
+  <div id="circOut" style="display:none;">
+    <div class="twoLine">
+      <span class="label">Lato sezione quadrata</span>
+      <span class="value" id="squareSideOut">—</span>
+    </div>
+
+    <div class="twoLine">
+      <span class="label">DN consigliato</span>
+      <span class="value" id="circDNOut">—</span>
+    </div>
+
+    <div class="twoLine">
+      <span class="label">Velocità DN consigliato</span>
+      <span class="value" id="circDNVOut">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== SUGGERIMENTO ========================================== -->
+<div class="card" id="suggestCard" style="display:none;">
+  <h2>Suggerimento</h2>
+  <div class="twoLine">
+    <span class="label">Consiglio UNI</span>
+    <span class="value" id="suggText">—</span>
+  </div>
+</div>
+
+<!-- ========================================== SCRIPT ========================================== -->
+<script>
+function byId(i){return document.getElementById(i);}
+function round(v,d){return Math.round(v*10**d)/10**d;}
+
+const scenarios={
+  res:{vMin:1.5,vMax:3.0},
+  office:{vMin:2.5,vMax:4.5},
+  hospital:{vMin:1.5,vMax:2.5},
+  extract:{vMin:5.0,vMax:7.0},
+  main:{vMin:4.0,vMax:6.5},
+  none:{vMin:null,vMax:null}
+};
+
+const stdDiameters=[100,125,150,160,200,250,315,355,400,450,500,560,600];
+
+/* Tema giorno/notte */
+(function(){
+  const h=new Date().getHours();
+  document.documentElement.setAttribute("data-theme",(h>=7&&h<19)?"light":"dark");
+})();
+
+function toggleUni(){
+  const box=byId("uniDetails");
+  box.style.display = box.style.display==="none" ? "block" : "none";
+}
+
+function resetForm(){
+  ["flow_m3h","velocity","base","height","diam"].forEach(id=>{
+    const el=byId(id);
+    if(el) el.value="";
+  });
+
+  byId("geom").value="rect";
+  byId("rect_fields").style.display="";
+  byId("circ_fields").style.display="none";
+  byId("dnBlock").style.display="";
+
+  ["areaOut","vEffOut","stdDNOut","stdDNVOut","rectSquareOut",
+   "squareSideOut","circDNOut","circDNVOut","suggText"].forEach(id=>{
+    byId(id).textContent="—";
+  });
+
+  byId("vEffTag").textContent="n/d";
+  byId("vEffTag").className="tag tag-na";
+
+  byId("rectSquareRow").style.display="none";
+  byId("circOut").style.display="none";
+  byId("suggestCard").style.display="none";
+
+  byId("uniDetails").style.display="none";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function getTag(v,min,max){
+  if(min==null) return {text:"n/d",cls:"tag-na"};
+  if(v<min) return {text:"Bassa",cls:"tag-low"};
+  if(v<=max) return {text:"OK",cls:"tag-ok"};
+  return {text:"Alta",cls:"tag-high"};
+}
+
+function calcola(){
+  const Qm=parseFloat(byId("flow_m3h").value);
+  let Q=null;
+  if(!isNaN(Qm)&&Qm>0) Q=Qm;
+  if(!Q){alert("Inserisci una portata Q (m³/h) > 0");return;}
+
+  const V_in=parseFloat(byId("velocity").value);
+  const geom=byId("geom").value;
+  const scen=scenarios[byId("scenario").value];
+  const Qs=Q/3600;
+
+  let A=null,v=null;
+
+  /* RESET */
+  byId("circOut").style.display="none";
+  byId("rectSquareRow").style.display="none";
+  byId("suggText").textContent="—";
+  byId("suggestCard").style.display="none";
+  if(byId("baseNote"))   byId("baseNote").style.display="none";
+  if(byId("heightNote")) byId("heightNote").style.display="none";
+
+  /* RETTANGOLARE */
+  if(geom==="rect"){
+    const bMm=parseFloat(byId("base").value);
+    const hMm=parseFloat(byId("height").value);
+    let b=bMm?bMm/1000:null;
+    let h=hMm?hMm/1000:null;
+    const hasB=!!b, hasH=!!h;
+
+    if(V_in){
+      A=Qs/V_in; v=V_in;
+      if(hasB && !hasH){
+        h=A/b;
+        byId("height").value=round(h*1000,1);
+        if(byId("heightNote")) byId("heightNote").style.display="";
+      } else if(!hasB && hasH){
+        b=A/h;
+        byId("base").value=round(b*1000,1);
+        if(byId("baseNote")) byId("baseNote").style.display="";
+      } else if(!hasB && !hasH){
+        const side=Math.sqrt(A)*1000;
+        byId("rectSquareRow").style.display="";
+        byId("rectSquareOut").textContent=round(side,1)+" mm";
+      } else {
+        A=b*h; v=Qs/A;
+      }
+    } else {
+      if(!hasB || !hasH){
+        alert("Se V non è nota, inserisci base e altezza.");
+        return;
+      }
+      A=b*h; v=Qs/A;
+    }
+  }
+
+  /* CIRCOLARE */
+  if(geom==="circ"){
+    const dMm=parseFloat(byId("diam").value);
+    const hasD=dMm>0;
+
+    if(V_in){
+      A=Qs/V_in; v=V_in;
+    } else {
+      if(!hasD){alert("Se V è sconosciuta, inserisci diametro.");return;}
+      const d=dMm/1000;
+      A=Math.PI*d*d/4;
+      v=Qs/A;
+    }
+
+    byId("circOut").style.display="";
+    const side=Math.sqrt(A)*1000;
+    byId("squareSideOut").textContent=round(side,1)+" mm";
+
+    if(V_in && !hasD){
+      const Deq=Math.sqrt(4*A/Math.PI)*1000;
+      let best=null,min=1e9;
+      for(const dn of stdDiameters){
+        if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn;}
+      }
+      byId("circDNOut").textContent="DN "+best+" mm";
+      const Astd=Math.PI*(best/1000)**2/4;
+      byId("circDNVOut").textContent=round(Qs/Astd,2)+" m/s";
+    }
+  }
+
+  if(!A||!v){alert("Errore.");return;}
+
+  byId("areaOut").textContent=round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
+  byId("vEffOut").textContent=round(v,2)+" m/s";
+
+  const tag=getTag(v,scen.vMin,scen.vMax);
+  byId("vEffTag").textContent=tag.text;
+  byId("vEffTag").className="tag "+tag.cls;
+
+  /* DIAMETRO EQUIVALENTE */
+  const Deq=Math.sqrt(4*A/Math.PI)*1000;
+  let best=null,min=1e9;
+  for(const dn of stdDiameters){
+    if(Math.abs(dn-Deq)<min){min=Math.abs(dn-Deq);best=dn;}
+  }
+
+  if(geom==="rect" && best){
+    byId("stdDNOut").textContent="Ø "+best+" mm";
+    const Astd=Math.PI*(best/1000)**2/4;
+    byId("stdDNVOut").textContent=round(Qs/Astd,2)+" m/s";
+  } else {
+    byId("stdDNOut").textContent="—";
+    byId("stdDNVOut").textContent="—";
+  }
+
+  /* SUGGERIMENTO UNI */
+  if(scen.vMax!=null && v>scen.vMax){
+    const vT=(scen.vMin+scen.vMax)/2;
+    const Anew=Qs/vT;
+
+    if(geom==="rect"){
+      const side=Math.sqrt(Anew)*1000;
+      byId("suggText").textContent="Velocità troppo alta. Sezione consigliata ~ "+round(side,1)+" × "+round(side,1)+" mm.";
+    } else {
+      const Deq2=Math.sqrt(4*Anew/Math.PI)*1000;
+      let best2=null,min2=1e9;
+      for(const dn of stdDiameters){
+        if(Math.abs(dn-Deq2)<min2){min2=Math.abs(dn-Deq2);best2=dn;}
+      }
+      const Astd2=Math.PI*(best2/1000)**2/4;
+      const vv=Qs/Astd2;
+      byId("suggText").textContent="Velocità troppo alta. Suggerito Ø "+best2+" mm (V≈"+round(vv,2)+" m/s).";
+    }
+
+    byId("suggestCard").style.display="";
+  }
+
+  byId("resultsCard").scrollIntoView({behavior:"smooth",block:"start"});
+}
+</script>
 
 </body>
 </html>

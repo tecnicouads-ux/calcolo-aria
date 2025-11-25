@@ -191,6 +191,9 @@
         <div>Diametro equivalente Deq: <span id="deqOut">—</span></div>
         <div>DN standard più vicino: <span id="stdDNOut">—</span></div>
         <div>Velocità con DN standard: <span id="stdDNVOut">—</span></div>
+        <div id="rectSquareRow" style="display:none;">
+          Sezione quadrata equivalente (lato): <span id="rectSquareOut">—</span>
+        </div>
       </div>
 
       <!-- BLOCCO CIRCOLARE -->
@@ -278,12 +281,16 @@ function calcola(){
   const vEffTagEl=byId("vEffTag");
   const circDNOut=byId("circDNOut");
   const circDNVOut=byId("circDNVOut");
+  const rectSquareRow=byId("rectSquareRow");
+  const rectSquareOut=byId("rectSquareOut");
 
   circOut.style.display="none";
   vEffTagEl.textContent="n/d";
   vEffTagEl.className="tag tag-na";
   circDNOut.textContent="—";
   circDNVOut.textContent="—";
+  rectSquareRow.style.display="none";
+  rectSquareOut.textContent="—";
 
   if(!Q || Q<=0){
     alert("Inserisci portata Q > 0");
@@ -303,10 +310,17 @@ function calcola(){
     const h=heightMm ? heightMm/1000 : null;
 
     if(V_input && V_input>0){
-      // Dimensionamento: Q + V -> A
+      // Dimensionamento: Q + V -> A (base/altezza opzionali)
       A=Qs/V_input;
       vEff=V_input;
-      // base/altezza opzionali: Deq e DN usano solo A
+
+      // Se NON inserisco né base né altezza -> mostra lato quadrato equivalente
+      if(!b && !h){
+        const side_m=Math.sqrt(A);
+        const side_mm=side_m*1000;
+        rectSquareRow.style.display="";
+        rectSquareOut.textContent=round(side_mm,1)+" mm";
+      }
     }else{
       // Verifica: Q + sezione -> V
       if(!b || !h){

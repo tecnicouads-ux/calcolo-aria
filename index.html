@@ -139,13 +139,10 @@ input, select {
   background: var(--bg-elevated);
   color: var(--text-main);
   margin-bottom: 6px;
-
-  /* altezza uniforme tra input e select */
   height: 48px;
   line-height: 48px;
 }
 
-/* padding verticale leggermente ridotto per centrare testo nei select su iOS */
 select {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -295,7 +292,7 @@ input:focus, select:focus {
 </div>
 
 <!-- ===================== RISULTATI ===================== -->
-<div class="card">
+<div class="card" id="resultsCard">
   <h2>Risultati</h2>
 
   <div class="twoLine">
@@ -593,6 +590,12 @@ function calcola(){
     }
 
     byId("suggestCard").style.display="";
+  }
+
+  /* 👉 SCROLL AI RISULTATI SU iPHONE (E WEB) */
+  const resCard = byId("resultsCard");
+  if(resCard && resCard.scrollIntoView){
+    resCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 </script>

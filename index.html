@@ -9,78 +9,190 @@
   <meta name="apple-mobile-web-app-title" content="Calcolo Aria">
 
   <style>
-    body {
-      margin: 0;
-      background: #0f172a;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      padding: 16px;
+    :root {
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --card: #020617;
+      --card-soft: #0b1220;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.16);
+      --border: #1f2937;
+      --border-soft: #111827;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97316;
     }
 
-    h1 {
-      text-align: center;
-      margin-top: 0;
-      font-size: 1.5rem;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0b1120 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      padding: 16px 16px 24px;
+    }
+
+    header {
+      margin-bottom: 16px;
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(34,197,94,0.14), transparent 48%),
+        linear-gradient(320deg, rgba(59,130,246,0.14), transparent 55%),
+        var(--bg-elevated);
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow:
+        0 22px 45px rgba(0,0,0,0.65),
+        inset 0 0 0 0.5px rgba(148,163,184,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #bbf7d0 0, #22c55e 40%, #15803d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 0 1.5px rgba(15,23,42,0.9), 0 10px 20px rgba(22,163,74,0.5);
+      flex-shrink: 0;
+    }
+
+    .app-title {
+      font-size: 1.05rem;
       font-weight: 600;
+      letter-spacing: 0.01em;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .app-pill {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      color: #e5e7eb;
+      background: rgba(15,23,42,0.8);
+    }
+
+    .app-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
     }
 
     .card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.24) 0, transparent 48%),
+                  var(--card-soft);
+      border-radius: 18px;
+      padding: 14px 14px 10px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-soft);
+      box-shadow:
+        0 18px 35px rgba(0,0,0,0.8),
+        inset 0 0 0 0.5px rgba(148,163,184,0.05);
     }
 
-    h2 {
-      font-size: 1rem;
-      margin: 0 0 8px 0;
+    .card h2 {
+      font-size: 0.9rem;
+      margin: 0 0 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e5e7eb;
+    }
+
+    .card h2 span.dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34,197,94,0.2);
     }
 
     label {
-      font-size: 0.8rem;
-      color: #cbd5e1;
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
 
     input, select {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      background: #0f172a;
-      color: #e2e8f0;
-      box-sizing: border-box;
+      padding: 8px 9px;
+      margin-top: 3px;
+      margin-bottom: 9px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, transform 0.06s ease;
+      -webkit-appearance: none;
     }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      margin-top: 6px;
-      cursor: pointer;
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.6), 0 0 0 6px rgba(34,197,94,0.12);
+      background: #020617;
+      transform: translateY(-0.5px);
+    }
+
+    select {
+      padding-right: 26px;
+      background-image: linear-gradient(135deg, rgba(148,163,184,0.7), transparent 55%);
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      background-size: 10px 10px;
     }
 
     .btn-primary {
-      background: #22c55e;
-      color: white;
-      margin-bottom: 8px;
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: radial-gradient(circle at 25% 0%, #bbf7d0 0, #22c55e 35%, #15803d 100%);
+      color: #022c22;
+      box-shadow:
+        0 16px 30px rgba(22,163,74,0.65),
+        0 0 0 1px rgba(15,23,42,0.9);
+      margin-top: 6px;
+      margin-bottom: 2px;
+      transition: transform 0.06s ease, box-shadow 0.1s ease, filter 0.1s ease;
     }
 
-    .results div {
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-      border-bottom: 1px dashed #334155;
-      padding-bottom: 3px;
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow:
+        0 8px 18px rgba(22,163,74,0.7),
+        0 0 0 1px rgba(15,23,42,0.9);
+      filter: brightness(0.98);
     }
 
     .note {
-      font-size: 0.75rem;
-      color: #9ca3af;
-      margin-bottom: 8px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
     }
 
     .row-2 {
@@ -89,137 +201,232 @@
       gap: 8px;
     }
 
+    .results div {
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+      border-bottom: 1px dashed #1e293b;
+      padding-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .results div span.value {
+      font-variant-numeric: tabular-nums;
+    }
+
     .tag {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       padding: 2px 8px;
       border-radius: 999px;
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       margin-left: 6px;
+      border: 1px solid rgba(15,23,42,0.9);
     }
 
     .tag-ok {
-      background: #16a34a;
-      color: #f9fafb;
+      background: rgba(34,197,94,0.16);
+      color: #bbf7d0;
     }
 
     .tag-high {
-      background: #b45309;
-      color: #fef3c7;
+      background: rgba(248,113,113,0.1);
+      color: #fed7aa;
+      border-color: rgba(248,113,113,0.6);
     }
 
     .tag-low {
-      background: #0369a1;
-      color: #e0f2fe;
+      background: rgba(59,130,246,0.12);
+      color: #bfdbfe;
+      border-color: rgba(59,130,246,0.7);
     }
 
     .tag-na {
-      background: #4b5563;
+      background: rgba(31,41,55,0.9);
       color: #e5e7eb;
     }
 
+    #suggestCard {
+      border: 1px solid rgba(248,113,113,0.5);
+      background:
+        linear-gradient(135deg, rgba(248,113,113,0.18), transparent 55%),
+        radial-gradient(circle at top left, rgba(251,146,60,0.12), transparent 55%),
+        var(--card-soft);
+    }
+
+    #suggestCard h2 {
+      color: #fed7aa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #suggestCard h2::before {
+      content: "⚠️";
+      font-size: 0.95rem;
+    }
+
+    #suggText {
+      font-size: 0.8rem;
+      color: #fee2e2;
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+    }
+
     @media (max-width: 480px) {
-      body {
-        padding: 12px;
+      .app {
+        padding: 12px 10px 20px;
+      }
+      header {
+        padding: 10px 11px 8px;
       }
     }
   </style>
 </head>
 
 <body>
-  <h1>Calcolo Canale Aria</h1>
+  <div class="app">
+    <header>
+      <div class="app-icon">↯</div>
+      <div>
+        <div class="app-title">
+          Calcolo Canale Aria
+          <span class="app-pill">HVAC tool</span>
+        </div>
+        <div class="app-subtitle">
+          Portata · velocità · sezioni rettangolari / circolari · suggerimenti UNI-like
+        </div>
+      </div>
+    </header>
 
-  <!-- INPUT -->
-  <div class="card">
-    <h2>Input</h2>
+    <!-- INPUT -->
+    <div class="card">
+      <h2><span class="dot"></span>Input di calcolo</h2>
 
-    <label>Portata Q (m³/h)</label>
-    <input id="flow" type="number">
+      <label>Portata Q (m³/h)</label>
+      <input id="flow" type="number" inputmode="decimal">
 
-    <label>Velocità V (m/s) (opzionale)</label>
-    <input id="velocity" type="number">
+      <label>Velocità V (m/s) <span style="color:var(--text-muted);">(opzionale)</span></label>
+      <input id="velocity" type="number" inputmode="decimal">
 
-    <label>Scenario impianto</label>
-    <select id="scenario">
-      <option value="res">Abitazione – mandata</option>
-      <option value="office">Uffici – mandata</option>
-      <option value="hospital">Ospedale – mandata</option>
-      <option value="extract">Estrazione / cucine</option>
-      <option value="main">Montante principale</option>
-      <option value="none">Nessun limite</option>
-    </select>
-    <div class="note" id="scenarioInfo"></div>
+      <label>Scenario impianto</label>
+      <select id="scenario">
+        <option value="res">Abitazione – mandata</option>
+        <option value="office">Uffici – mandata</option>
+        <option value="hospital">Ospedale – mandata</option>
+        <option value="extract">Estrazione / cucine</option>
+        <option value="main">Montante principale</option>
+        <option value="none">Nessun limite</option>
+      </select>
+      <div class="note" id="scenarioInfo"></div>
 
-    <label>Tipo sezione</label>
-    <select id="geom">
-      <option value="rect">Rettangolare</option>
-      <option value="circ">Circolare</option>
-    </select>
+      <label>Tipo sezione</label>
+      <select id="geom">
+        <option value="rect">Rettangolare</option>
+        <option value="circ">Circolare</option>
+      </select>
 
-    <div id="rect_fields">
-      <div class="row-2">
+      <div id="rect_fields">
+        <div class="row-2">
+          <div>
+            <label>Base (mm)</label>
+            <input id="base" type="number" inputmode="decimal">
+          </div>
+          <div>
+            <label>Altezza (mm)</label>
+            <input id="height" type="number" inputmode="decimal">
+          </div>
+        </div>
+      </div>
+
+      <div id="circ_fields" style="display:none;">
+        <label>Diametro (mm)</label>
+        <input id="diam" type="number" inputmode="decimal">
+      </div>
+
+      <button class="btn-primary" onclick="calcola()">Calcola</button>
+    </div>
+
+    <!-- RISULTATI -->
+    <div class="card">
+      <h2><span class="dot"></span>Risultati</h2>
+      <div class="results">
         <div>
-          <label>Base (mm)</label>
-          <input id="base" type="number">
+          <span>Area A</span>
+          <span class="value" id="areaOut">—</span>
         </div>
         <div>
-          <label>Altezza (mm)</label>
-          <input id="height" type="number">
+          <span>Velocità considerata V</span>
+          <span>
+            <span class="value" id="vEffOut">—</span>
+            <span id="vEffTag" class="tag tag-na">n/d</span>
+          </span>
+        </div>
+
+        <!-- BLOCCO DN/DEQ SOLO PER RETTANGOLARE -->
+        <div id="dnBlock">
+          <div>
+            <span>Diametro equivalente Deq</span>
+            <span class="value" id="deqOut">—</span>
+          </div>
+          <div>
+            <span>DN standard più vicino</span>
+            <span class="value" id="stdDNOut">—</span>
+          </div>
+          <div>
+            <span>Velocità con DN standard</span>
+            <span class="value" id="stdDNVOut">—</span>
+          </div>
+          <div id="rectSquareRow" style="display:none;">
+            <span>Sezione quadrata equivalente (lato)</span>
+            <span class="value" id="rectSquareOut">—</span>
+          </div>
+        </div>
+
+        <!-- BLOCCO CIRCOLARE -->
+        <div id="circOut" style="display:none;">
+          <div>
+            <span>Sezione quadrata equivalente (lato)</span>
+            <span class="value" id="squareSideOut">—</span>
+          </div>
+          <div>
+            <span>DN standard consigliato</span>
+            <span class="value" id="circDNOut">—</span>
+          </div>
+          <div>
+            <span>Velocità con DN consigliato</span>
+            <span class="value" id="circDNVOut">—</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="circ_fields" style="display:none;">
-      <label>Diametro (mm)</label>
-      <input id="diam" type="number">
+    <!-- SUGGERIMENTO -->
+    <div class="card" id="suggestCard" style="display:none;">
+      <h2>Suggerimento</h2>
+      <div class="results">
+        <div id="suggText">—</div>
+      </div>
     </div>
 
-    <button class="btn-primary" onclick="calcola()">Calcola</button>
-  </div>
-
-  <!-- RISULTATI -->
-  <div class="card">
-    <h2>Risultati</h2>
-    <div class="results">
-      <div>Area A: <span id="areaOut">—</span></div>
-      <div>Velocità considerata V:
-        <span id="vEffOut">—</span>
-        <span id="vEffTag" class="tag tag-na">n/d</span>
-      </div>
-
-      <!-- BLOCCO DN/DEQ SOLO PER RETTANGOLARE -->
-      <div id="dnBlock">
-        <div>Diametro equivalente Deq: <span id="deqOut">—</span></div>
-        <div>DN standard più vicino: <span id="stdDNOut">—</span></div>
-        <div>Velocità con DN standard: <span id="stdDNVOut">—</span></div>
-        <div id="rectSquareRow" style="display:none;">
-          Sezione quadrata equivalente (lato): <span id="rectSquareOut">—</span>
+    <!-- CONVERSIONI -->
+    <div class="card">
+      <h2><span class="dot"></span>Conversioni</h2>
+      <div class="results">
+        <div>
+          <span>Q in m³/s</span>
+          <span class="value" id="qM3sOut">—</span>
+        </div>
+        <div>
+          <span>A in cm²</span>
+          <span class="value" id="areaCm2Out">—</span>
+        </div>
+        <div>
+          <span>V in km/h</span>
+          <span class="value" id="vKmhOut">—</span>
         </div>
       </div>
-
-      <!-- BLOCCO CIRCOLARE -->
-      <div id="circOut" style="display:none;">
-        <div>Sezione quadrata equivalente (lato): <span id="squareSideOut">—</span></div>
-        <div>DN standard consigliato: <span id="circDNOut">—</span></div>
-        <div>Velocità con DN consigliato: <span id="circDNVOut">—</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SUGGERIMENTO -->
-  <div class="card" id="suggestCard" style="display:none;">
-    <h2>Suggerimento</h2>
-    <div class="results">
-      <div id="suggText">—</div>
-    </div>
-  </div>
-
-  <!-- CONVERSIONI -->
-  <div class="card">
-    <h2>Conversioni</h2>
-    <div class="results">
-      <div>Q in m³/s: <span id="qM3sOut">—</span></div>
-      <div>A in cm²: <span id="areaCm2Out">—</span></div>
-      <div>V in km/h: <span id="vKmhOut">—</span></div>
     </div>
   </div>
 
@@ -322,11 +529,9 @@ function calcola(){
     const h=heightMm ? heightMm/1000 : null;
 
     if(V_input && V_input>0){
-      // Dimensionamento: Q + V -> A
       A=Qs/V_input;
       vEff=V_input;
 
-      // Se non inserisco base/altezza -> sezione quadrata equivalente
       if(!b && !h){
         const side_m=Math.sqrt(A);
         const side_mm=side_m*1000;
@@ -334,7 +539,6 @@ function calcola(){
         rectSquareOut.textContent=round(side_mm,1)+" mm";
       }
     }else{
-      // Verifica: Q + sezione -> V
       if(!b || !h){
         alert("Se la velocità non è nota, per rettangolare servono base e altezza.");
         return;
@@ -352,11 +556,9 @@ function calcola(){
     let d = hasD ? dMm/1000 : null;
 
     if(V_input && V_input>0){
-      // Dimensionamento: Q + V -> A (diametro opzionale)
       A=Qs/V_input;
       vEff=V_input;
     }else{
-      // Verifica: Q + D -> V
       if(!hasD){
         alert("Se la velocità non è nota, per circolare serve il diametro.");
         return;
@@ -365,13 +567,11 @@ function calcola(){
       vEff=Qs/A;
     }
 
-    // Mostro sempre lato quadrato equivalente
     circOut.style.display="";
     const side_m=Math.sqrt(A);
     const side_mm=side_m*1000;
     byId("squareSideOut").textContent=round(side_mm,1)+" mm";
 
-    // Se ho SOLO Q + V (diametro NON inserito) -> calcolo DN consigliato da A
     if(V_input && V_input>0 && !hasD){
       const Deq_mm=Math.sqrt(4*A/Math.PI)*1000;
       let best=null,minDiff=1e9;
@@ -396,22 +596,18 @@ function calcola(){
     return;
   }
 
-  // Area in m² e mm²
   const A_mm2=A*1_000_000;
   byId("areaOut").textContent=round(A,4)+" m² ("+round(A_mm2,0)+" mm²)";
 
-  // Velocità + tag
   byId("vEffOut").textContent=round(vEff,2)+" m/s";
   const tag=getVelocityTag(vEff,scen.vMin,scen.vMax);
   vEffTagEl.textContent=tag.text;
   vEffTagEl.className="tag "+tag.cls;
 
-  // Conversioni
   byId("qM3sOut").textContent=round(Qs,4);
   byId("areaCm2Out").textContent=round(A*10000,1);
   byId("vKmhOut").textContent=round(vEff*3.6,2);
 
-  // DN / Deq solo per rettangolare
   if(geom==="rect"){
     const Deq_mm=Math.sqrt(4*A/Math.PI)*1000;
     byId("deqOut").textContent=round(Deq_mm,1)+" mm";
@@ -449,8 +645,8 @@ function calcola(){
       const side_mm = side_m*1000;
       suggText.textContent =
         "Velocità risultante alta per lo scenario selezionato. " +
-        "Per rientrare nei range tipici UNI, puoi usare una sezione quadrata circa " +
-        round(side_mm,1) + " × " + round(side_mm,1) + " mm, con V ≈ " +
+        "Per rientrare nei range tipici UNI, puoi usare una sezione rettangolare equivalente " +
+        "di circa " + round(side_mm,1) + " × " + round(side_mm,1) + " mm, con V ≈ " +
         round(vTarget,2) + " m/s.";
     }else if(geom==="circ"){
       const Anew = Qs / vTarget;

@@ -288,21 +288,21 @@ function calcola(){
   let vEff=null;
   const Qs=Q/3600;
 
+  // RETTANGOLARE
   if(geom==="rect"){
     dnBlock.style.display="";
     const baseMm=parseFloat(byId("base").value);
     const heightMm=parseFloat(byId("height").value);
-    const b=baseMm? baseMm/1000 : null;
-    const h=heightMm? heightMm/1000 : null;
+    const b=baseMm ? baseMm/1000 : null;
+    const h=heightMm ? heightMm/1000 : null;
 
     if(V_input && V_input>0){
+      // Dimensionamento: Q + V -> A
       A=Qs/V_input;
       vEff=V_input;
-      // se base/altezza mancanti, dimensiono solo per area
-      if(!b || !h){
-        // ok, nessun vincolo geometrico richiesto in output
-      }
+      // base/altezza possono anche essere vuote, non sono obbligatorie
     }else{
+      // Verifica: Q + sezione -> V
       if(!b || !h){
         alert("Se la velocità non è nota, per rettangolare servono base e altezza.");
         return;
@@ -312,27 +312,28 @@ function calcola(){
     }
   }
 
+  // CIRCOLARE
   if(geom==="circ"){
     dnBlock.style.display="none";
     const dMm=parseFloat(byId("diam").value);
     const hasD = dMm && dMm>0;
-    let d=null;
+    let d = hasD ? dMm/1000 : null;
 
     if(V_input && V_input>0){
+      // Dimensionamento: Q + V -> A (diametro opzionale)
       A=Qs/V_input;
       vEff=V_input;
-      // il diametro è opzionale in questo caso
     }else{
+      // Verifica: Q + D -> V
       if(!hasD){
         alert("Se la velocità non è nota, per circolare serve il diametro.");
         return;
       }
-      d=dMm/1000;
       A=Math.PI*d*d/4;
       vEff=Qs/A;
     }
 
-    // mostra solo il lato equivalente
+    // Mostro solo lato quadrato equivalente
     circOut.style.display="";
     const side_m=Math.sqrt(A);
     const side_mm=side_m*1000;

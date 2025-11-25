@@ -161,27 +161,6 @@ input:focus, select:focus {
   margin-bottom: 8px;
 }
 
-/* header piccolino per Q + unità */
-.flow-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.flow-header label {
-  margin-bottom: 0;
-}
-
-.flow-unit-select {
-  width: auto !important;
-  flex-shrink: 0;
-  font-size: 13px;
-  height: 32px;
-  line-height: 32px;
-  padding: 4px 8px;
-}
-
 /* link "Mostra limiti UNI" */
 .link-button {
   background: none;
@@ -200,6 +179,7 @@ input:focus, select:focus {
   border-radius: 10px;
   padding: 6px;
   margin-top: 4px;
+  margin-bottom: 8px; /* spazio prima di "Forma canale" */
   background: var(--bg-elevated);
 }
 
@@ -323,13 +303,7 @@ input:focus, select:focus {
 <div class="card">
   <h2>Input</h2>
 
-  <div class="flow-header">
-    <label for="flow">Portata Q</label>
-    <select id="flowUnit" class="flow-unit-select">
-      <option value="m3h">m³/h</option>
-      <option value="ls">l/s</option>
-    </select>
-  </div>
+  <label for="flow">Portata Q (m³/h)</label>
   <input id="flow" type="number" inputmode="decimal">
 
   <label>Velocità V (m/s) (opzionale)</label>
@@ -528,7 +502,6 @@ function resetForm(){
     if(el) el.value = "";
   });
 
-  byId("flowUnit").value = "m3h";
   byId("scenario").value = "res";
   byId("geom").value = "rect";
 
@@ -562,15 +535,8 @@ function resetForm(){
 
 /* CALCOLO */
 function calcola(){
-  const Qval = parseFloat(byId("flow").value);
-  const unit = byId("flowUnit").value;
-  let Q = null;
-
-  if(!isNaN(Qval) && Qval>0){
-    Q = (unit === "ls") ? Qval * 3.6 : Qval; // interno sempre m³/h
-  }
-
-  if(!Q){alert("Inserisci una portata Q > 0");return;}
+  const Q = parseFloat(byId("flow").value);
+  if(!Q || Q<=0){alert("Inserisci una portata Q > 0");return;}
 
   const V_in=parseFloat(byId("velocity").value);
   const geom=byId("geom").value;

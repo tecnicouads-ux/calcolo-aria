@@ -11,7 +11,7 @@
     :root {
       --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 
-      /* DARK */
+      /* Tema DARK */
       --bg: #020617;
       --bg-elevated: #0b1120;
       --card-soft: #111827;
@@ -21,10 +21,9 @@
       --border-soft: #0f172a;
       --text-main: #f9fafb;
       --text-muted: #9ca3af;
-      --danger: #f97316;
 
-      --shadow-strong: rgba(0,0,0,0.7);
-      --shadow-header: rgba(0,0,0,0.5);
+      --shadow-header: rgba(0,0,0,0.45);
+      --shadow-strong: rgba(0,0,0,0.65);
     }
 
     html[data-theme="light"] {
@@ -32,13 +31,13 @@
       --bg-elevated: #ffffff;
       --card-soft: #ffffff;
       --accent: #16a34a;
-      --accent-soft: rgba(22,163,74,0.15);
+      --accent-soft: rgba(22,163,74,0.2);
       --border: #cbd5e1;
       --border-soft: #e5e7eb;
       --text-main: #111827;
       --text-muted: #6b7280;
-      --shadow-strong: rgba(148,163,184,0.4);
       --shadow-header: rgba(148,163,184,0.3);
+      --shadow-strong: rgba(148,163,184,0.45);
     }
 
     * {
@@ -53,37 +52,38 @@
       color: var(--text-main);
       font-family: var(--font-main);
       font-size: 15px;
-      line-height: 1.4;
+      line-height: 1.35;
       display: flex;
       justify-content: center;
     }
 
     .app {
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       padding: 14px;
     }
 
+    /* HEADER */
     header {
       background: var(--bg-elevated);
-      border-radius: 16px;
       padding: 12px 14px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px var(--shadow-header);
       border: 1px solid var(--border-soft);
-      box-shadow: 0 14px 28px var(--shadow-header);
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .app-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 10px;
-      background: radial-gradient(circle at 30% 20%, #bbf7d0 0, #22c55e 45%, #15803d 100%);
+      background: radial-gradient(circle at 30% 20%, #bbf7d0 0, #22c55e 50%, #15803d 100%);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       font-size: 18px;
       font-weight: 800;
       color: #022c22;
@@ -93,7 +93,6 @@
     .app-title {
       font-size: 17px;
       font-weight: 700;
-      margin-bottom: 2px;
     }
 
     .app-subtitle {
@@ -101,13 +100,14 @@
       color: var(--text-muted);
     }
 
+    /* CARD */
     .card {
       background: var(--card-soft);
-      border-radius: 16px;
       padding: 14px;
-      margin-bottom: 12px;
+      border-radius: 16px;
       border: 1px solid var(--border-soft);
-      box-shadow: 0 14px 26px var(--shadow-strong);
+      margin-bottom: 14px;
+      box-shadow: 0 12px 28px var(--shadow-strong);
     }
 
     .card h2 {
@@ -119,506 +119,242 @@
     label {
       font-size: 14px;
       font-weight: 600;
-      color: var(--text-main);
       margin-bottom: 2px;
       display: block;
+      color: var(--text-main);
     }
 
     input,
     select {
       width: 100%;
       font-size: 15px;
-      font-weight: 500;
       padding: 7px 10px;
-      margin: 4px 0 10px 0;
-      border-radius: 10px;
+      margin: 4px 0 12px 0;
       border: 1px solid var(--border);
+      border-radius: 10px;
       background: var(--bg-elevated);
       color: var(--text-main);
       outline: none;
-      transition: 0.15s border, 0.15s box-shadow, 0.15s background;
+      transition: 0.15s;
     }
 
     input:focus,
     select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-soft);
-      background: #02061720;
-    }
-
-    .note {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: -4px;
-      margin-bottom: 6px;
     }
 
     .btn-primary {
       width: 100%;
-      padding: 10px 0;
-      font-size: 15px;
-      font-weight: 700;
+      padding: 11px;
       border-radius: 999px;
       border: none;
+      font-size: 15px;
+      font-weight: 700;
       background: var(--accent);
       color: #022c22;
-      box-shadow: 0 10px 24px rgba(34,197,94,0.5);
+      box-shadow: 0 8px 20px rgba(34,197,94,0.45);
       cursor: pointer;
-      transition: 0.1s transform, 0.1s box-shadow;
     }
 
     .btn-primary:active {
       transform: scale(0.98);
-      box-shadow: 0 6px 14px rgba(34,197,94,0.6);
     }
 
+    /* RISULTATI */
     .results div {
       font-size: 14px;
       font-weight: 600;
-      border-bottom: 1px solid var(--border);
-      padding: 5px 0;
       display: flex;
       justify-content: space-between;
-      gap: 8px;
-    }
-
-    .results div span:last-child {
-      white-space: nowrap; /* ✅ valori e tag sempre su una riga */
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
     }
 
     .results div:last-child {
       border-bottom: none;
     }
 
+    /* FIX: valori a destra NON devono uscire */
+    .results div span:last-child {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      max-width: 60%;
+      white-space: normal !important;
+      overflow-wrap: break-word;
+      text-align: right;
+    }
+
+    /* TAG (sempre inline, mai su 2 righe) */
     .tag {
+      white-space: nowrap !important;
       padding: 2px 8px;
       font-size: 12px;
-      font-weight: 700;
       border-radius: 999px;
-      margin-left: 6px;
+      font-weight: 700;
     }
 
     .tag-ok {
       background: #22c55e33;
       color: #22c55e;
     }
-
-    .tag-high {
-      background: #f9731630;
-      color: #fb923c;
-    }
-
     .tag-low {
       background: #3b82f630;
       color: #3b82f6;
     }
-
+    .tag-high {
+      background: #f9731630;
+      color: #fb923c;
+    }
     .tag-na {
       background: #6b728033;
       color: #6b7280;
     }
 
+    /* SUGGERIMENTO */
     #suggestCard {
-      background: #f9731610;
+      background: #f9731612;
       border: 1px solid #f97316;
     }
 
     #suggText {
       font-size: 14px;
       font-weight: 600;
-      line-height: 1.4;
-      border-bottom: none !important;
-      padding-bottom: 0 !important;
-      white-space: normal !important; /* il suggerimento può andare a capo */
-    }
-
-    @media (max-width: 480px) {
-      .app {
-        padding: 10px;
-      }
-
-      header {
-        padding: 10px 12px;
-      }
-
-      .card {
-        padding: 12px;
-      }
+      line-height: 1.35;
+      white-space: normal !important;
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <header>
-      <div class="app-icon">↯</div>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="app-icon">↯</div>
+    <div>
+      <div class="app-title">Calcolo Canale Aria</div>
+      <div class="app-subtitle">HVAC · portata · DN · UNI</div>
+    </div>
+  </header>
+
+  <!-- INPUT -->
+  <div class="card">
+    <h2>Input di calcolo</h2>
+
+    <label>Portata Q (m³/h)</label>
+    <input id="flow" type="number">
+
+    <label>Velocità V (m/s) (opzionale)</label>
+    <input id="velocity" type="number">
+
+    <label>Scenario impianto</label>
+    <select id="scenario">
+      <option value="res">Abitazione – mandata</option>
+      <option value="office">Uffici – mandata</option>
+      <option value="hospital">Ospedale – mandata</option>
+      <option value="extract">Estrazione / cucine</option>
+      <option value="main">Montante principale</option>
+      <option value="none">Nessun limite</option>
+    </select>
+
+    <label>Tipo sezione</label>
+    <select id="geom">
+      <option value="rect">Rettangolare</option>
+      <option value="circ">Circolare</option>
+    </select>
+
+    <div id="rect_fields">
+      <label>Base (mm)</label>
+      <input id="base" type="number">
+      <label>Altezza (mm)</label>
+      <input id="height" type="number">
+    </div>
+
+    <div id="circ_fields" style="display:none;">
+      <label>Diametro (mm)</label>
+      <input id="diam" type="number">
+    </div>
+
+    <button class="btn-primary" onclick="calcola()">Calcola</button>
+  </div>
+
+  <!-- RISULTATI -->
+  <div class="card">
+    <h2>Risultati</h2>
+    <div class="results">
+      <div><span>Area A</span><span id="areaOut">—</span></div>
+
       <div>
-        <div class="app-title">Calcolo Canale Aria</div>
-        <div class="app-subtitle">HVAC · portata · velocità · DN · UNI</div>
-      </div>
-    </header>
-
-    <!-- INPUT -->
-    <div class="card">
-      <h2>Input di calcolo</h2>
-
-      <label>Portata Q (m³/h)</label>
-      <input id="flow" type="number" inputmode="decimal">
-
-      <label>Velocità V (m/s) (opzionale)</label>
-      <input id="velocity" type="number" inputmode="decimal">
-
-      <label>Scenario impianto</label>
-      <select id="scenario">
-        <option value="res">Abitazione – mandata</option>
-        <option value="office">Uffici – mandata</option>
-        <option value="hospital">Ospedale – mandata</option>
-        <option value="extract">Estrazione / cucine</option>
-        <option value="main">Montante principale</option>
-        <option value="none">Nessun limite</option>
-      </select>
-      <div class="note" id="scenarioInfo"></div>
-
-      <label>Tipo sezione</label>
-      <select id="geom">
-        <option value="rect">Rettangolare</option>
-        <option value="circ">Circolare</option>
-      </select>
-
-      <div id="rect_fields">
-        <label>Base (mm)</label>
-        <input id="base" type="number" inputmode="decimal">
-        <label>Altezza (mm)</label>
-        <input id="height" type="number" inputmode="decimal">
+        <span>Velocità considerata</span>
+        <span><span id="vEffOut">—</span><span id="vEffTag" class="tag tag-na">n/d</span></span>
       </div>
 
-      <div id="circ_fields" style="display:none;">
-        <label>Diametro (mm)</label>
-        <input id="diam" type="number" inputmode="decimal">
-      </div>
-
-      <button class="btn-primary" onclick="calcola()">Calcola</button>
-    </div>
-
-    <!-- RISULTATI -->
-    <div class="card">
-      <h2>Risultati</h2>
-      <div class="results">
-        <div>
-          <span>Area A</span>
-          <span id="areaOut">—</span>
-        </div>
-
-        <div>
-          <span>Velocità considerata</span>
-          <span>
-            <span id="vEffOut">—</span>
-            <span id="vEffTag" class="tag tag-na">n/d</span>
-          </span>
-        </div>
-
-        <!-- Rettangolare -->
-        <div id="dnBlock">
-          <div>
-            <span>Diametro equivalente</span>
-            <span id="deqOut">—</span>
-          </div>
-          <div>
-            <span>DN standard</span>
-            <span id="stdDNOut">—</span>
-          </div>
-          <div>
-            <span>Velocità DN</span>
-            <span id="stdDNVOut">—</span>
-          </div>
-          <div id="rectSquareRow" style="display:none;">
-            <span>Lato sezione quadrata</span>
-            <span id="rectSquareOut">—</span>
-          </div>
-        </div>
-
-        <!-- Circolare -->
-        <div id="circOut" style="display:none;">
-          <div>
-            <span>Lato sezione quadrata</span>
-            <span id="squareSideOut">—</span>
-          </div>
-          <div>
-            <span>DN consigliato</span>
-            <span id="circDNOut">—</span>
-          </div>
-          <div>
-            <span>Velocità DN consigliato</span>
-            <span id="circDNVOut">—</span>
-          </div>
+      <div id="dnBlock">
+        <div><span>Diametro equivalente</span><span id="deqOut">—</span></div>
+        <div><span>DN standard</span><span id="stdDNOut">—</span></div>
+        <div><span>Velocità con DN</span><span id="stdDNVOut">—</span></div>
+        <div id="rectSquareRow" style="display:none;">
+          <span>Lato sezione quadrata</span>
+          <span id="rectSquareOut">—</span>
         </div>
       </div>
-    </div>
 
-    <!-- SUGGERIMENTO -->
-    <div class="card" id="suggestCard" style="display:none;">
-      <h2>Suggerimento</h2>
-      <div class="results">
-        <div id="suggText">—</div>
-      </div>
-    </div>
-
-    <!-- CONVERSIONI -->
-    <div class="card">
-      <h2>Conversioni</h2>
-      <div class="results">
-        <div>
-          <span>Q in m³/s</span>
-          <span id="qM3sOut">—</span>
-        </div>
-        <div>
-          <span>A in cm²</span>
-          <span id="areaCm2Out">—</span>
-        </div>
-        <div>
-          <span>V in km/h</span>
-          <span id="vKmhOut">—</span>
-        </div>
+      <div id="circOut" style="display:none;">
+        <div><span>Lato sezione quadrata</span><span id="squareSideOut">—</span></div>
+        <div><span>DN consigliato</span><span id="circDNOut">—</span></div>
+        <div><span>Velocità DN consigliato</span><span id="circDNVOut">—</span></div>
       </div>
     </div>
   </div>
 
-  <script>
-    function byId(id) { return document.getElementById(id); }
-    function round(v, d) { return Math.round(v * 10 ** d) / 10 ** d; }
+  <!-- SUGGERIMENTO -->
+  <div class="card" id="suggestCard" style="display:none;">
+    <h2>Suggerimento</h2>
+    <div class="results">
+      <div id="suggText"></div>
+    </div>
+  </div>
 
-    const scenarios = {
-      res: { vMin: 1.5, vMax: 3.5 },
-      office: { vMin: 2.0, vMax: 4.0 },
-      hospital: { vMin: 1.5, vMax: 3.0 },
-      extract: { vMin: 5.0, vMax: 8.0 },
-      main: { vMin: 6.0, vMax: 9.0 },
-      none: { vMin: null, vMax: null }
-    };
+  <!-- CONVERSIONI -->
+  <div class="card">
+    <h2>Conversioni</h2>
+    <div class="results">
+      <div><span>Q in m³/s</span><span id="qM3sOut">—</span></div>
+      <div><span>A in cm²</span><span id="areaCm2Out">—</span></div>
+      <div><span>V in km/h</span><span id="vKmhOut">—</span></div>
+    </div>
+  </div>
 
-    const stdDiameters = [100,125,150,160,200,250,315,355,400,450,500,560,600];
+</div>
 
-    // Tema automatico giorno/notte
-    (function setThemeByTime() {
-      const h = new Date().getHours();
-      const isDay = h >= 7 && h < 19;
-      document.documentElement.setAttribute("data-theme", isDay ? "light" : "dark");
-    })();
+<script>
+/* Utility */
+function byId(id) { return document.getElementById(id); }
+function round(v,d){ return Math.round(v*10**d)/10**d; }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const geomSel = byId("geom");
-      const rectFields = byId("rect_fields");
-      const circFields = byId("circ_fields");
-      const scenSel = byId("scenario");
-      const scenInfo = byId("scenarioInfo");
+/* Scenari */
+const scenarios={
+  res:{vMin:1.5,vMax:3.5},
+  office:{vMin:2.0,vMax:4.0},
+  hospital:{vMin:1.5,vMax:3.0},
+  extract:{vMin:5.0,vMax:8.0},
+  main:{vMin:6.0,vMax:9.0},
+  none:{vMin:null,vMax:null}
+};
 
-      function updateScenarioInfo() {
-        const s = scenarios[scenSel.value];
-        if (s.vMin != null) {
-          scenInfo.textContent = "Range UNI consigliato: " + s.vMin + " – " + s.vMax + " m/s";
-        } else {
-          scenInfo.textContent = "Nessun limite impostato";
-        }
-      }
+const stdDiameters=[100,125,150,160,200,250,315,355,400,450,500,560,600];
 
-      scenSel.addEventListener("change", updateScenarioInfo);
-      updateScenarioInfo();
+/* Tema giorno/notte */
+(function(){
+  const h=new Date().getHours();
+  const isDay=h>=7 && h<19;
+  document.documentElement.setAttribute("data-theme", isDay? "light":"dark");
+})();
 
-      geomSel.addEventListener("change", () => {
-        if (geomSel.value === "rect") {
-          rectFields.style.display = "";
-          circFields.style.display = "none";
-          byId("dnBlock").style.display = "";
-        } else {
-          rectFields.style.display = "none";
-          circFields.style.display = "";
-          byId("dnBlock").style.display = "none";
-        }
-        byId("circOut").style.display = "none";
-      });
-    });
-
-    function getVelocityTag(v, min, max) {
-      if (!v || min == null) return { text: "n/d", cls: "tag-na" };
-      if (v < min) return { text: "Bassa", cls: "tag-low" };
-      if (v <= max) return { text: "OK", cls: "tag-ok" };
-      return { text: "Alta", cls: "tag-high" };
-    }
-
-    function calcola() {
-      const Q = parseFloat(byId("flow").value);
-      const V_input = parseFloat(byId("velocity").value);
-      const geom = byId("geom").value;
-      const scenKey = byId("scenario").value;
-      const scen = scenarios[scenKey];
-
-      const dnBlock = byId("dnBlock");
-      const circOut = byId("circOut");
-      const vEffTagEl = byId("vEffTag");
-      const circDNOut = byId("circDNOut");
-      const circDNVOut = byId("circDNVOut");
-      const rectSquareRow = byId("rectSquareRow");
-      const rectSquareOut = byId("rectSquareOut");
-      const suggestCard = byId("suggestCard");
-      const suggText = byId("suggText");
-
-      circOut.style.display = "none";
-      vEffTagEl.textContent = "n/d";
-      vEffTagEl.className = "tag tag-na";
-      circDNOut.textContent = "—";
-      circDNVOut.textContent = "—";
-      rectSquareRow.style.display = "none";
-      rectSquareOut.textContent = "—";
-      suggestCard.style.display = "none";
-      suggText.textContent = "—";
-
-      if (!Q || Q <= 0) {
-        alert("Inserisci Q > 0");
-        return;
-      }
-
-      let A = null;
-      let vEff = null;
-      const Qs = Q / 3600;
-
-      // Rettangolare
-      if (geom === "rect") {
-        dnBlock.style.display = "";
-        const baseMm = parseFloat(byId("base").value);
-        const heightMm = parseFloat(byId("height").value);
-        const b = baseMm ? baseMm / 1000 : null;
-        const h = heightMm ? heightMm / 1000 : null;
-
-        if (V_input && V_input > 0) {
-          A = Qs / V_input;
-          vEff = V_input;
-
-          if (!b && !h) {
-            const side_m = Math.sqrt(A);
-            const side_mm = side_m * 1000;
-            rectSquareRow.style.display = "";
-            rectSquareOut.textContent = round(side_mm, 1) + " mm";
-          }
-        } else {
-          if (!b || !h) {
-            alert("Se la velocità non è nota, inserisci base e altezza.");
-            return;
-          }
-          A = b * h;
-          vEff = Qs / A;
-        }
-      }
-
-      // Circolare
-      if (geom === "circ") {
-        dnBlock.style.display = "none";
-        const dMm = parseFloat(byId("diam").value);
-        const hasD = dMm && dMm > 0;
-
-        if (V_input && V_input > 0) {
-          A = Qs / V_input;
-          vEff = V_input;
-        } else {
-          if (!hasD) {
-            alert("Se la velocità non è nota, inserisci il diametro.");
-            return;
-          }
-          const d = dMm / 1000;
-          A = Math.PI * d * d / 4;
-          vEff = Qs / A;
-        }
-
-        circOut.style.display = "";
-        const side_m = Math.sqrt(A);
-        const side_mm = side_m * 1000;
-        byId("squareSideOut").textContent = round(side_mm, 1) + " mm";
-
-        if (V_input && V_input > 0 && !hasD) {
-          const Deq_mm = Math.sqrt(4 * A / Math.PI) * 1000;
-          let best = null, minDiff = 1e9;
-          for (const dn of stdDiameters) {
-            const diff = Math.abs(dn - Deq_mm);
-            if (diff < minDiff) { minDiff = diff; best = dn; }
-          }
-          if (best) {
-            circDNOut.textContent = "DN " + best + " mm";
-            const Astd = Math.PI * (best / 1000) ** 2 / 4;
-            circDNVOut.textContent = round(Qs / Astd, 2) + " m/s";
-          }
-        }
-      }
-
-      if (!A || !vEff || A <= 0 || vEff <= 0) {
-        alert("Errore nei dati, controlla gli input.");
-        return;
-      }
-
-      // Risultati principali
-      const A_mm2 = A * 1_000_000;
-      byId("areaOut").textContent = round(A, 4) + " m² (" + round(A_mm2, 0) + " mm²)";
-      byId("vEffOut").textContent = round(vEff, 2) + " m/s";
-      const tag = getVelocityTag(vEff, scen.vMin, scen.vMax);
-      vEffTagEl.textContent = tag.text;
-      vEffTagEl.className = "tag " + tag.cls;
-
-      byId("qM3sOut").textContent = round(Qs, 4);
-      byId("areaCm2Out").textContent = round(A * 10000, 1);
-      byId("vKmhOut").textContent = round(vEff * 3.6, 2);
-
-      // DN per rettangolare
-      if (geom === "rect") {
-        const Deq_mm = Math.sqrt(4 * A / Math.PI) * 1000;
-        byId("deqOut").textContent = round(Deq_mm, 1) + " mm";
-
-        let best = null, minDiff = 1e9;
-        for (const dn of stdDiameters) {
-          const diff = Math.abs(dn - Deq_mm);
-          if (diff < minDiff) { minDiff = diff; best = dn; }
-        }
-
-        if (best) {
-          byId("stdDNOut").textContent = "DN " + best + " mm";
-          const Astd = Math.PI * (best / 1000) ** 2 / 4;
-          byId("stdDNVOut").textContent = round(Qs / Astd, 2) + " m/s";
-        } else {
-          byId("stdDNOut").textContent = "—";
-          byId("stdDNVOut").textContent = "—";
-        }
-      } else {
-        byId("deqOut").textContent = "—";
-        byId("stdDNOut").textContent = "—";
-        byId("stdDNVOut").textContent = "—";
-      }
-
-      // Suggerimento se V alta
-      if (scen.vMax != null && vEff > scen.vMax) {
-        const vTarget = (scen.vMin + scen.vMax) / 2;
-        if (geom === "rect") {
-          const Anew = Qs / vTarget;
-          const side_m = Math.sqrt(Anew);
-          const mm = round(side_m * 1000, 1);
-          suggText.textContent =
-            "Velocità alta per lo scenario selezionato. Sezione quadrata equivalente ≈ " +
-            mm + " × " + mm + " mm (V ≈ " + round(vTarget, 2) + " m/s).";
-        } else {
-          const Anew = Qs / vTarget;
-          const Deq_new_mm = Math.sqrt(4 * Anew / Math.PI) * 1000;
-          let best = null, minDiff = 1e9;
-          for (const dn of stdDiameters) {
-            const diff = Math.abs(dn - Deq_new_mm);
-            if (diff < minDiff) { minDiff = diff; best = dn; }
-          }
-          if (best) {
-            const Astd = Math.PI * (best / 1000) ** 2 / 4;
-            const Vstd = Qs / Astd;
-            suggText.textContent =
-              "Velocità alta per lo scenario. Suggerito DN " + best +
-              " mm (V ≈ " + round(Vstd, 2) + " m/s).";
-          }
-        }
-        suggestCard.style.display = "";
-      }
-    }
-  </script>
-</body>
-</html>
+/* Cambio sezione */
+document.addEventListener("DOMContentLoaded",()=>{
+  const geomSe

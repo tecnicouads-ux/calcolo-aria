@@ -187,10 +187,15 @@
         <span id="vEffOut">—</span>
         <span id="vEffTag" class="tag tag-na">n/d</span>
       </div>
-      <div>Diametro equivalente Deq (da A): <span id="deqOut">—</span></div>
-      <div>DN standard più vicino: <span id="stdDNOut">—</span></div>
-      <div>Velocità con DN standard: <span id="stdDNVOut">—</span></div>
 
+      <!-- Blocco DN / Deq: visibile solo in rettangolare -->
+      <div id="dnBlock">
+        <div>Diametro equivalente Deq (da A): <span id="deqOut">—</span></div>
+        <div>DN standard più vicino: <span id="stdDNOut">—</span></div>
+        <div>Velocità con DN standard: <span id="stdDNVOut">—</span></div>
+      </div>
+
+      <!-- Blocco extra solo per circolare -->
       <div id="circOut" style="display:none;">
         <div>Velocità con diametro inserito:
           <span id="vRealOut">—</span>
@@ -234,6 +239,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const circFields = document.getElementById("circ_fields");
   const scenSel = document.getElementById("scenario");
   const scenInfo = document.getElementById("scenarioInfo");
+  const dnBlock = document.getElementById("dnBlock");
 
   function updateScenarioInfo() {
     const s = scenarios[scenSel.value];
@@ -250,9 +256,11 @@ document.addEventListener("DOMContentLoaded", function() {
     if (geomSel.value === "rect") {
       rectFields.style.display = "";
       circFields.style.display = "none";
+      dnBlock.style.display = "";
     } else {
       rectFields.style.display = "none";
       circFields.style.display = "";
+      dnBlock.style.display = "none";
     }
     document.getElementById("circOut").style.display = "none";
   });
@@ -277,6 +285,7 @@ function calcola() {
   const circOut = document.getElementById("circOut");
   const vEffTagEl = document.getElementById("vEffTag");
   const vRealTagEl = document.getElementById("vRealTag");
+  const dnBlock = document.getElementById("dnBlock");
 
   circOut.style.display = "none";
   vEffTagEl.textContent = "n/d";
@@ -299,6 +308,8 @@ function calcola() {
     let heightMm = parseFloat(document.getElementById("height").value);
     let baseM = baseMm ? baseMm / 1000 : null;
     let heightM = heightMm ? heightMm / 1000 : null;
+
+    dnBlock.style.display = ""; // mostra blocco DN/Deq in rettangolare
 
     if (V_input && V_input > 0) {
       // Dimensionamento: Q + V -> A
@@ -328,6 +339,8 @@ function calcola() {
   if (geom === "circ") {
     let dInputMm = parseFloat(document.getElementById("diam").value);
     let D_ins_m = dInputMm ? dInputMm / 1000 : null;
+
+    dnBlock.style.display = "none"; // nascondi Deq/DN/Vstd in circolare
 
     if (V_input && V_input > 0) {
       // Dimensionamento: Q + V -> A
@@ -388,11 +401,6 @@ function calcola() {
   document.getElementById("areaOut").textContent =
     round(A, 4) + " m² (" + round(A_mm2, 0) + " mm²)";
 
-  // Deq
-  const Deq_m = Math.sqrt(4 * A / Math.PI);
-  const Deq_mm = Deq_m * 1000;
-  document.getElementById("deqOut").textContent = round(Deq_mm, 1) + " mm";
-
   // conversioni
   document.getElementById("qM3sOut").textContent = round(Q_m3s, 4);
   document.getElementById("areaCm2Out").textContent = round(A * 10000, 1);
@@ -403,27 +411,39 @@ function calcola() {
   vEffTagEl.textContent = vEffTag.text;
   vEffTagEl.className = "tag " + vEffTag.cls;
 
-  // DN standard più vicino a Deq
-  let chosenDN = null;
-  let minDiff = Infinity;
-  for (let i = 0; i < stdDiameters.length; i++) {
-    const diff = Math.abs(stdDiameters[i] - Deq_mm);
-    if (diff < minDiff) {
-      minDiff = diff;
-      chosenDN = stdDiameters[i];
+  // Sezione rettangolare → calcolo Deq/DN/Vstd (solo se rettangolare)
+  if (geom === "rect") {
+    const Deq_m = Math.sqrt(4 * A / Math.PI);
+    const Deq_mm = Deq_m * 1000;
+    document.getElementById("deqOut").textContent = round(Deq_mm, 1) + " mm";
+
+    // DN standard più vicino a Deq
+    let chosenDN = null;
+    let minDiff = Infinity;
+    for (let i = 0; i < stdDiameters.length; i++) {
+      const diff = Math.abs(stdDiameters[i] - Deq_mm);
+      if (diff < minDiff) {
+        minDiff = diff;
+        chosenDN = stdDiameters[i];
+      }
     }
-  }
 
-  if (chosenDN) {
-    const D_chosen_m = chosenDN / 1000;
-    const A_chosen = Math.PI * Math.pow(D_chosen_m, 2) / 4;
-    const V_chosen = Q_m3s / A_chosen;
+    if (chosenDN) {
+      const D_chosen_m = chosenDN / 1000;
+      const A_chosen = Math.PI * Math.pow(D_chosen_m, 2) / 4;
+      const V_chosen = Q_m3s / A_chosen;
 
-    document.getElementById("stdDNOut").textContent =
-      "DN " + chosenDN + " mm";
-    document.getElementById("stdDNVOut").textContent =
-      round(V_chosen, 2) + " m/s";
+      document.getElementById("stdDNOut").textContent =
+        "DN " + chosenDN + " mm";
+      document.getElementById("stdDNVOut").textContent =
+        round(V_chosen, 2) + " m/s";
+    } else {
+      document.getElementById("stdDNOut").textContent = "—";
+      document.getElementById("stdDNVOut").textContent = "—";
+    }
   } else {
+    // se circolare, svuoto i testi DN/Deq giusto per non lasciare residui logici
+    document.getElementById("deqOut").textContent = "—";
     document.getElementById("stdDNOut").textContent = "—";
     document.getElementById("stdDNVOut").textContent = "—";
   }

@@ -161,6 +161,9 @@ input, select {
   color: #ffffff;
   border: none;
   box-shadow: 0 8px 20px rgba(22,163,74,0.45);
+  
+  /* 🔥 UNICA MODIFICA */
+  margin-top: 10px;
 }
 
 /* -------------------------------------------------------------
@@ -386,19 +389,17 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   byId("scenario").addEventListener("change", updateScenarioNote);
 
-  /* ========== UNICA AGGIUNTA: auto-select sugli input numerici ========== */
+  /* ========== AUTO-SELECT su tutti gli input numerici ========== */
   const inputs = document.querySelectorAll('input[type="number"]');
   inputs.forEach(inp=>{
     inp.addEventListener('focus', function(){
-      // piccolo timeout per iOS/Safari così la selezione prende bene
       setTimeout(()=>{ this.select(); }, 0);
     });
     inp.addEventListener('mouseup', function(e){
-      // evita che il mouseup deselezioni subito il testo
       e.preventDefault();
     });
   });
-  /* ====================================================================== */
+  /* ============================================================= */
 
 });
 
@@ -447,7 +448,6 @@ function calcola(){
       const Qs_tmp = Q/3600;
 
       if(V_in){
-        // Caso "classico" originale: da Q e V ricavo A
         A = Qs_tmp / V_in;
         v = V_in;
 
@@ -462,13 +462,11 @@ function calcola(){
           byId("rectSquareRow").style.display="";
           byId("rectSquareOut").textContent = round(side,1)+" mm";
         } else {
-          // Tutte e due inserite → ricalcolo v dalla sezione reale
           A = b*h;
           v = Qs_tmp / A;
         }
 
       } else {
-        // Niente velocità → servono base e altezza
         if(!b || !h){
           alert("Se la velocità non è nota, inserisci base e altezza.");
           return;
@@ -478,7 +476,6 @@ function calcola(){
       }
 
     } else {
-      // PORTATA NON NOTA → uso V_in + dimensioni per ricavare Q
       if(!V_in){
         alert("Se la portata non è nota, inserisci una velocità V > 0.");
         return;
@@ -497,15 +494,14 @@ function calcola(){
     let dMm = parseFloat(byId("diam").value);
     let d   = (!isNaN(dMm) && dMm>0) ? dMm/1000 : null;
 
-    if(Q){ // PORTATA NOTA
+    if(Q){ 
       const Qs_tmp = Q/3600;
 
       if(V_in){
-        // Caso Q e V note:
-        // se il diametro NON è inserito, calcolo DN standard più vicino
+
         if(!d){
-          const Aideal = Qs_tmp / V_in; // area ideale
-          const Deq = Math.sqrt(4*Aideal/Math.PI)*1000; // diametro ideale [mm]
+          const Aideal = Qs_tmp / V_in;
+          const Deq = Math.sqrt(4*Aideal/Math.PI)*1000;
 
           let best = null, m = 1e9;
           for(const dn of stdDiameters){
@@ -524,17 +520,14 @@ function calcola(){
         }
 
         if(!d){
-          // fallback: uso comunque A da Q e V
           A = Qs_tmp / V_in;
           v = V_in;
         } else {
-          // uso DN (inserito o appena scelto) e ricalcolo v reale
           A = Math.PI*d*d/4;
           v = Qs_tmp / A;
         }
 
       } else {
-        // Nessuna velocità: uso Q + diametro
         if(!d){
           alert("Se la velocità non è nota, inserisci diametro.");
           return;
@@ -544,20 +537,18 @@ function calcola(){
       }
 
     } else {
-      // PORTATA NON NOTA → uso V_in + diametro
       if(!V_in){
-        alert("Se la portata non è nota, inserisci una velocità V > 0.");
+        alert("Se la portata non è nota, inserisci velocità V.");
         return;
       }
       if(!d){
-        alert("Se la portata non è nota, inserisci il diametro.");
+        alert("Se la portata non è nota, inserisci diametro.");
         return;
       }
       A = Math.PI*d*d/4;
       v = V_in;
     }
 
-    // Blocco risultati specifico per circolare
     byId("circOut").style.display="";
     byId("squareSideOut").textContent = round(Math.sqrt(A)*1000,1)+" mm";
   }
@@ -567,17 +558,16 @@ function calcola(){
     return;
   }
 
-  // Ora, se Q era sconosciuta, la ricavo da A e v
   let Qs;
   if(Q && Q>0){
     Qs = Q/3600;
   } else {
     Qs = v*A;
     Q  = Qs*3600;
-    byId("flow").value = Math.round(Q); // aggiorno campo portata
+    byId("flow").value = Math.round(Q);
   }
 
-  /* ===================== RISULTATI GENERALI ===================== */
+  /* ===================== RISULTATI ===================== */
   byId("areaOut").textContent =
     round(A,4)+" m² ("+round(A*1e6,0)+" mm²)";
   byId("vEffOut").textContent = round(v,2)+" m/s";
@@ -612,7 +602,7 @@ function calcola(){
     const vT = (scen.vMin+scen.vMax)/2;
     const Anew = Qs/vT;
 
-    const L = Math.sqrt(Anew)*1000;  // lato quadrato in mm
+    const L = Math.sqrt(Anew)*1000;
 
     let best = null, m = 1e9;
     const DeqNew = Math.sqrt(4*Anew/Math.PI)*1000;
@@ -632,7 +622,6 @@ function calcola(){
     byId("suggestCard").style.display="";
   }
 
-  /* SCROLL AUTOMATICO */
   setTimeout(()=>{
     byId("resultsCard").scrollIntoView({behavior:"smooth",block:"start"});
   },120);

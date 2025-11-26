@@ -297,15 +297,14 @@ input, select {
 
   <div id="dnBlock">
 
-    <!-- ❌ RIMOSSO DIAMETRO EQUIVALENTE -->
-
+    <!-- Ø standard -->
     <div class="twoLine">
-      <span class="label">DN standard</span>
+      <span class="label">Ø standard</span>
       <span class="value" id="stdDNOut">—</span>
     </div>
 
     <div class="twoLine">
-      <span class="label">Velocità con DN</span>
+      <span class="label">Velocità Ø</span>
       <span class="value" id="stdDNVOut">—</span>
     </div>
 
@@ -505,15 +504,15 @@ function calcola(){
   byId("vEffTag").textContent=tag.text;
   byId("vEffTag").className="tag "+tag.cls;
 
-  /* DN rettangolare (DEQ rimosso) */
+  /* Ø STANDARD rettangolare */
   if(geom==="rect"){
-    const Deq=Math.sqrt(4*A/Math.PI)*1000; /* anche se calcolato, non mostrato */
+    const Deq=Math.sqrt(4*A/Math.PI)*1000;
 
     let best=null,m=1e9;
     for(const dn of stdDiameters){if(Math.abs(dn-Deq)<m){m=Math.abs(dn-Deq);best=dn;}}
 
     if(best){
-      byId("stdDNOut").textContent="DN "+best+" mm";
+      byId("stdDNOut").textContent="Ø "+best+" mm";
       byId("stdDNVOut").textContent=
         round(Qs/(Math.PI*(best/1000)**2/4),2)+" m/s";
     } else {

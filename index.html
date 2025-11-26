@@ -293,6 +293,11 @@ input, select {
     </span>
   </div>
 
+  <div class="twoLine">
+    <span class="label">Q UNI (min / med / max)</span>
+    <span class="value" id="qRangeOut">—</span>
+  </div>
+
   <div id="dnBlock">
 
     <div class="twoLine">
@@ -404,7 +409,8 @@ function calcola(){
   const V_in = (!isNaN(V_raw) && V_raw>0) ? V_raw : null;
 
   const geom = byId("geom").value;
-  const scen = scenarios[byId("scenario").value];
+  const scenKey = byId("scenario").value;
+  const scen = scenarios[scenKey];
 
   // Serve almeno portata o velocità
   if(!Q && !V_in){
@@ -419,6 +425,7 @@ function calcola(){
   byId("circOut").style.display="none";
   byId("rectSquareRow").style.display="none";
   byId("suggestCard").style.display="none";
+  byId("qRangeOut").textContent = "—";
 
   /* ===================== RETTANGOLARE ===================== */
   if(geom==="rect"){
@@ -539,6 +546,18 @@ function calcola(){
   const tag = getTag(v,scen.vMin,scen.vMax);
   byId("vEffTag").textContent = tag.text;
   byId("vEffTag").className = "tag "+tag.cls;
+
+  /* Q UNI min / med / max (se scenario con limiti) */
+  if(scen.vMin!=null && scen.vMax!=null){
+    const Qmin = scen.vMin * A * 3600;
+    const Qmax = scen.vMax * A * 3600;
+    const vMed = (scen.vMin + scen.vMax)/2;
+    const Qmed = vMed * A * 3600;
+    byId("qRangeOut").textContent =
+      Math.round(Qmin)+" / "+Math.round(Qmed)+" / "+Math.round(Qmax)+" m³/h";
+  } else {
+    byId("qRangeOut").textContent = "n/d";
+  }
 
   /* Ø STANDARD rettangolare */
   if(geom==="rect"){

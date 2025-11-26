@@ -139,7 +139,7 @@ input {
   background: var(--bg-elevated);
   color: var(--text-main);
   margin-bottom: 6px;
-  height: 42px;              /* campo dati più alto */
+  height: 42px;
   box-sizing: border-box;
 }
 
@@ -152,10 +152,9 @@ select {
   background: var(--bg-elevated);
   color: var(--text-main);
   margin-bottom: 6px;
-  height: 42px;              /* tendine stessa altezza degli input */
+  height: 42px;
   box-sizing: border-box;
 }
-
 
 input:focus, select:focus {
   border-color: var(--accent);
@@ -286,13 +285,13 @@ input:focus, select:focus {
   <label>Velocità V (m/s) (opzionale)</label>
   <input id="velocity" type="number" inputmode="decimal">
 
-  <label>Scenario UNI</label>
+  <label>Scenario UNI (riferimento normativa)</label>
   <select id="scenario">
-    <option value="res">Abitazione</option>
-    <option value="office">Uffici</option>
-    <option value="hospital">Ospedale</option>
-    <option value="extract">Estrazione</option>
-    <option value="main">Montante</option>
+    <option value="res">Abitazione – UNI 10339 / UNI EN 15251</option>
+    <option value="office">Uffici – UNI 10339 / UNI EN 13779</option>
+    <option value="hospital">Ospedale – UNI 11425 / UNI EN 13779</option>
+    <option value="extract">Estrazione – UNI 10339 / UNI EN 13779</option>
+    <option value="main">Montante – UNI 10339 / UNI EN 13779</option>
     <option value="none">Nessun limite</option>
   </select>
   <div id="scenarioNote" class="info-note">
@@ -301,7 +300,7 @@ input:focus, select:focus {
     <div class="info-note-row">Riferimenti: UNI 10339, UNI EN 15251.</div>
   </div>
 
-  <label>Tipo sezione</label>
+  <label>Geometria del condotto</label>
   <select id="geom">
     <option value="rect">Rettangolare</option>
     <option value="circ">Circolare</option>

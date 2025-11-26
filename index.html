@@ -43,7 +43,7 @@ html[data-theme="light"] {
 }
 
 /* -------------------------------------------------------------
-   STRUTTURA BASE (SAFE AREA NOTCH)
+   STRUTTURA BASE
 ------------------------------------------------------------- */
 body {
   margin: 0;
@@ -55,7 +55,6 @@ body {
   display: flex;
   justify-content: center;
   padding: 12px;
-  padding-top: env(safe-area-inset-top); /* evita il notch */
 }
 
 .app {
@@ -68,7 +67,7 @@ body {
 ------------------------------------------------------------- */
 header {
   background: var(--bg-elevated);
-  padding: calc(6px + env(safe-area-inset-top)) 10px 6px 10px;
+  padding: 6px 10px;            
   border-radius: 14px;
   box-shadow: 0 8px 18px var(--shadow-header);
   border: 1px solid var(--border-soft);
@@ -76,7 +75,7 @@ header {
   align-items: center;
   gap: 10px;
   margin-bottom: 14px;
-  min-height: 70px;
+  min-height: 70px;             
 }
 
 .app-logo {
@@ -91,7 +90,7 @@ header {
 .app-title {
   font-size: 18px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1;                
   margin-bottom: 4px;
 }
 
@@ -121,7 +120,7 @@ header {
 }
 
 /* -------------------------------------------------------------
-   INPUT & SELECT (stessa altezza)
+   INPUT
 ------------------------------------------------------------- */
 label {
   font-size: 14px;
@@ -139,8 +138,6 @@ input, select {
   background: var(--bg-elevated);
   color: var(--text-main);
   margin-bottom: 6px;
-  height: 38px;              /* stessa altezza input/select */
-  box-sizing: border-box;
 }
 
 input:focus, select:focus {
@@ -154,14 +151,6 @@ input:focus, select:focus {
   color: var(--accent);
   margin-top: -2px;
   margin-bottom: 8px;
-}
-
-/* Nota sotto Scenario UNI */
-.info-note {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin: -2px 0 8px 0;
-  line-height: 1.25;
 }
 
 /* -------------------------------------------------------------
@@ -269,9 +258,6 @@ input:focus, select:focus {
     <option value="main">Montante</option>
     <option value="none">Nessun limite</option>
   </select>
-  <div id="scenarioNote" class="info-note">
-    Abitazioni: 1,5 – 3,5 m/s in mandata ambiente (UNI 10339, UNI EN 15251).
-  </div>
 
   <label>Tipo sezione</label>
   <select id="geom">
@@ -302,7 +288,7 @@ input:focus, select:focus {
   <h2>Risultati</h2>
 
   <div class="twoLine">
-    <span class="label">Area</span>
+    <span class="label">Area A</span>
     <span class="value" id="areaOut">—</span>
   </div>
 
@@ -384,41 +370,13 @@ const scenarios={
 
 const stdDiameters=[100,125,150,160,200,250,315,355,400,450,500,560,600];
 
-/* Testi nota UNI */
-function updateScenarioNote(){
-  const s = byId("scenario").value;
-  const note = byId("scenarioNote");
-  switch(s){
-    case "res":
-      note.textContent = "Abitazioni: 1,5 – 3,5 m/s in mandata ambiente (UNI 10339, UNI EN 15251).";
-      break;
-    case "office":
-      note.textContent = "Uffici: 2,0 – 4,0 m/s nei condotti principali (UNI 10339, UNI EN 13779).";
-      break;
-    case "hospital":
-      note.textContent = "Ospedali: 1,5 – 3,0 m/s nei condotti a servizio di locali critici (UNI 11425, UNI EN 13779).";
-      break;
-    case "extract":
-      note.textContent = "Estrazione / cucine / locali tecnici: 5,0 – 8,0 m/s nei condotti di espulsione.";
-      break;
-    case "main":
-      note.textContent = "Montanti principali impianto: 6,0 – 9,0 m/s nei condotti verticali principali.";
-      break;
-    case "none":
-      note.textContent = "Nessun limite: il controllo velocità UNI è disattivato.";
-      break;
-    default:
-      note.textContent = "";
-  }
-}
-
 /* Tema giorno/notte */
 (function(){
   const h=new Date().getHours();
   document.documentElement.setAttribute("data-theme",(h>=7&&h<19)?"light":"dark");
 })();
 
-/* Toggle sezione + nota UNI */
+/* Toggle sezione */
 document.addEventListener("DOMContentLoaded",()=>{
   const geom=byId("geom");
   geom.addEventListener("change",()=>{
@@ -433,10 +391,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
     byId("circOut").style.display="none";
   });
-
-  const scenarioSel = byId("scenario");
-  scenarioSel.addEventListener("change", updateScenarioNote);
-  updateScenarioNote(); // iniziale
 });
 
 /* Tag velocità */
@@ -459,7 +413,7 @@ function calcola(){
 
   let A=null,v=null;
 
-  // RESET
+  /* RESET */
   byId("circOut").style.display="none";
   byId("rectSquareRow").style.display="none";
   byId("rectSquareOut").textContent="—";
